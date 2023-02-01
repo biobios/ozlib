@@ -1,0 +1,7 @@
+#pragma once
+
+#include <cstdint>
+
+namespace std {
+using size_t = uint64_t;
+}
