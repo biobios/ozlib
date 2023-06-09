@@ -3,5 +3,5 @@
 #include <cstdint>
 
 namespace std {
-using size_t = uint64_t;
+using size_t = decltype(sizeof(0));
 }
