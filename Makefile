@@ -1,20 +1,27 @@
 COMPILER = clang++
-CFLAGS = -O2 -Wall -g --target=x86_64-unknown-none-elf -g -ffreestanding -mno-red-zone -fno-exceptions -fno-rtti -std=c++20 -c
-HEADERS = $(filter-out %spec, $(notdir $(wildcard $(SRCDIR)*)))
+CFLAGS = -O2 -Wall -g --target=x86_64-unknown-none-elf -g -ffreestanding -mno-red-zone -fno-exceptions -fno-rtti -std=c++20 -I $(SRCDIR) -c
+HEADERS = $(filter-out %common, $(filter-out %spec, $(notdir $(wildcard $(SRCDIR)*))))
 INCLUDEDIR = ./include/
 SRCDIR = ./src/
 TEMPDIR = ./temp/
-SPECDIR = $(SRCDIR)spec/
-IMPLES = $(wildcard $(SPECDIR)*.cpp)
-OBJECTS = $(addprefix $(TEMPDIR), $(notdir $(IMPLES:.cpp=.o)))
+SPECDIR = spec/
+COMMONDIR = common/
+SPECSRC = $(wildcard $(SRCDIR)$(SPECDIR)*.cpp)
+COMMONSRC = $(wildcard $(SRCDIR)$(COMMONDIR)*.cpp)
+SPECOBJECTS = $(addprefix $(TEMPDIR)$(SPECDIR), $(notdir $(SPECSRC:.cpp=.o)))
+COMMONOBJECTS = $(addprefix $(TEMPDIR)$(COMMONDIR), $(notdir $(COMMONSRC:.cpp=.o)))
 
 
-build:./lib/liboz.a copyheaders
+build:./lib/libozstd.a ./lib/libcommonstd.a copyheaders
 
-./lib/liboz.a: $(OBJECTS)
+./lib/libozstd.a: $(SPECOBJECTS)
 	ar rcs $@ $^
 
-$(TEMPDIR)%.o: $(SPECDIR)%.cpp
+./lib/libcommonstd.a: $(COMMONOBJECTS)
+	ar rcs $@ $^
+
+$(TEMPDIR)%.o: $(SRCDIR)%.cpp
+	mkdir -p $(dir $@)
 	$(COMPILER) $(CFLAGS) -o $@ -c $<
 
 copyheaders: $(addprefix $(INCLUDEDIR), $(HEADERS))
