@@ -1,5 +1,5 @@
 COMPILER = clang++
-CFLAGS = -O2 -Wall -g --target=x86_64-unknown-none-elf -g -ffreestanding -mno-red-zone -fno-exceptions -fno-rtti -std=c++20 -I $(SRCDIR) -c
+CFLAGS = -O2 -Wall -g --target=x86_64-unknown-none-elf -g -ffreestanding -mno-red-zone -fno-exceptions -fno-rtti -std=c++20 -I $(SRCDIR)
 HEADERS = $(filter-out %common, $(filter-out %spec, $(notdir $(wildcard $(SRCDIR)*))))
 INCLUDEDIR = ./include/
 SRCDIR = ./src/
@@ -22,13 +22,18 @@ build:./lib/libozstd.a ./lib/libcommonstd.a copyheaders
 
 $(TEMPDIR)%.o: $(SRCDIR)%.cpp
 	mkdir -p $(dir $@)
-	$(COMPILER) $(CFLAGS) -o $@ -c $<
+	$(COMPILER) $(CFLAGS) -c -o $@ -c $<
 
 copyheaders: $(addprefix $(INCLUDEDIR), $(HEADERS))
 
 $(INCLUDEDIR)%: $(SRCDIR)%
 	mkdir -p $(dir $@)
 	cp $< $@
+
+test: ./test/test.out
+
+./test/test.out: ./test/test.cpp
+	$(COMPILER) $(CFLAGS) -o $@ -c $<
 
 clean:
 	rm $(TEMPDIR)*
@@ -40,4 +45,4 @@ setup:
 	mkdir -p lib
 	mkdir -p temp
 
-.PHONY: setup copyheaders clean build
+.PHONY: setup copyheaders clean build test
