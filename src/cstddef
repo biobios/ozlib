@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cstdint>
+#include <utility>
 
 namespace std {
 using size_t = decltype(sizeof(0));
+using ptrdiff_t = decltype(declval<int*>() - declval<int*>());
 }
