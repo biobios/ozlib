@@ -1,0 +1,31 @@
+#pragma once
+
+#include <cstddef>
+#include <utility>
+
+namespace std {
+template <class T, size_t N>
+struct array {
+    T _data[N];
+    using reference = T&;
+    using const_reference = const T&;
+    using size_type = size_t;
+    using difference_type = decltype(declval<T*>() - declval<T*>());
+    using pointer = T*;
+    using const_pointer = const T*;
+    using value_type = T;
+    [[nodiscard]] constexpr bool empty() const noexcept { return N == 0; }
+    constexpr size_type size() const noexcept { return N; }
+    constexpr size_type max_size() const noexcept { return N; }
+    constexpr reference at(size_type n) { return _data[n]; }
+    constexpr const_reference at(size_type n) const { return _data[n]; }
+    constexpr reference operator[](size_type n) { return _data[n]; }
+    constexpr const_reference operator[](size_type n) const { return _data[n]; }
+    constexpr reference front() { return _data[0]; }
+    constexpr const_reference front() const { return _data[0]; }
+    constexpr reference back() { return _data[N - 1]; }
+    constexpr const_reference back() const { return _data[N - 1]; }
+    constexpr T* data() noexcept { return &_data[0]; }
+    constexpr const T* data() const noexcept { return &_data[0]; }
+};
+}  // namespace std
