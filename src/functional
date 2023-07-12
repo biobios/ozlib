@@ -1,0 +1,383 @@
+#pragma once
+
+#include <cstdint>
+#include <utility>
+#include <memory>
+
+namespace std{
+
+    namespace helper{
+
+        struct invoke_other{};
+        struct invoke_memobj_ptr{};
+        struct invoke_memobj_refwrap{};
+        struct invoke_memobj_ref{};
+        struct invoke_memfun_ptr{};
+        struct invoke_memfun_refwrap{};
+        struct invoke_memfun_ref{};
+
+        template <typename VOID, typename T, typename... Args>
+        struct invoke_type {
+            using type = invoke_other;
+        };
+
+        template <typename Ret, typename T>
+        struct invoke_type<void, Ret (T::*), T*>{
+            using type = invoke_memobj_ptr;
+        };
+
+        template <typename Ret, typename T, typename Arg>
+        struct invoke_type<enable_if_t<is_same_v<reference_wrapper<T>,remove_cvref_t<Arg>> && !is_function_v<Ret>>, Ret (T::*), Arg>{
+            using type = invoke_memobj_refwrap;
+        };
+
+        template <typename Ret, typename T, typename Arg>
+        struct invoke_type<enable_if_t<is_base_of_v<T, remove_cvref_t<Arg>> && !is_function_v<Ret>>, Ret (T::*), Arg>{
+            using type = invoke_memobj_ref;
+        };
+        
+        template <typename Ret, typename T, typename T1, typename... Args>
+        struct invoke_type<enable_if_t<!is_same_v<reference_wrapper<T>,remove_cvref_t<T1>> && !is_base_of_v<T, remove_cvref_t<T1>>>, Ret (T::*)(Args...), T1, Args...>{
+            using type = invoke_memfun_ptr;
+        };
+
+        template <typename Ret, typename T, typename T1, typename... Args>
+        struct invoke_type<enable_if_t<is_same_v<reference_wrapper<T>,remove_cvref_t<T1>>>, Ret (T::*)(Args...), T1, Args...>{
+            using type = invoke_memfun_refwrap;
+        };
+
+        template <typename Ret, typename T, typename T1, typename... Args>
+        struct invoke_type<enable_if_t<is_base_of_v<T, remove_cvref_t<T1>>>, Ret (T::*)(Args...), T1, Args...>{
+            using type = invoke_memfun_ref;
+        };
+    }
+
+    namespace helper{
+
+        template<typename Res, typename Fn, typename... Args>
+        constexpr Res invoke_impl(helper::invoke_other, Fn&& f, Args&&... args)
+        {
+            return std::forward<Fn>(f)(std::forward<Args>(args)...);
+        }
+
+        template<typename Res, typename MemObjPtr, typename T>
+        constexpr Res invoke_impl(helper::invoke_memobj_ptr, MemObjPtr&& f, T&& t)
+        {
+            return (*std::forward<T>(t).*f);
+        }
+
+        template<typename Res, typename MemObjPtr, typename RefWrap>
+        constexpr Res invoke_impl(helper::invoke_memobj_refwrap, MemObjPtr&& f, RefWrap&& t)
+        {
+            return (t.get().*f);
+        }
+
+        template<typename Res, typename MemObjPtr, typename T>
+        constexpr Res invoke_impl(helper::invoke_memobj_ref, MemObjPtr&& f, T&& t)
+        {
+            return (std::forward<T>(t).*f);
+        }
+
+        template<typename Res, typename MemFunPtr, typename T, typename... Args>
+        constexpr Res invoke_impl(helper::invoke_memfun_ptr, MemFunPtr&& f, T&& t, Args&&... args)
+        {
+            return (*std::forward<T>(t).*f)(std::forward<Args>(args)...);
+        }
+
+        template<typename Res, typename MemFunPtr, typename RefWrap, typename... Args>
+        constexpr Res invoke_impl(helper::invoke_memfun_refwrap, MemFunPtr&& f, RefWrap&& t, Args&&... args)
+        {
+            return (t.get().*f)(std::forward<Args>(args)...);
+        }
+
+        template<typename Res, typename MemFunPtr, typename T, typename... Args>
+        constexpr Res invoke_impl(helper::invoke_memfun_ref, MemFunPtr&& f, T&& t, Args&&... args)
+        {
+            return (std::forward<T>(t).*f)(std::forward<Args>(args)...);
+        }
+
+        template <typename Callable, typename... Args>
+        constexpr invoke_result_t<Callable, Args...>
+        invoke(Callable&& f, Args&&... args)
+        {
+            return helper::invoke_impl<invoke_result_t<Callable, Args...>>(typename helper::invoke_type<void, Callable, Args...>::type{}, std::forward<Callable>(f), std::forward<Args>(args)...);
+        }
+    }
+
+    template <typename Callable, typename... Args>
+    inline constexpr invoke_result_t<Callable, Args...>
+    invoke(Callable&& f, Args&&... args)
+    {
+        return helper::invoke(std::forward<Callable>(f), std::forward<Args>(args)...);
+    }
+
+    template <class T>
+    class reference_wrapper{
+        //トリビアルコピー可能である
+        T* ptr;
+
+        static constexpr T* _S_fun(T& t) noexcept{
+            return addressof(t);
+        }
+
+        static void _S_fun(T&&) = delete;
+
+        public:
+        using type = T;
+
+        template <class U, class = enable_if<!is_same_v<reference_wrapper, remove_cvref_t<U>>>, class = decltype(reference_wrapper::_S_fun(std::declval<U>()))>
+        constexpr reference_wrapper(U&& u) noexcept(noexcept(reference_wrapper::_S_fun(std::declval<U>()))): ptr(reference_wrapper::_S_fun(std::forward<U>(u))){}
+
+        constexpr reference_wrapper(const reference_wrapper& x) noexcept = default;
+        ~reference_wrapper() noexcept = default;
+
+        constexpr reference_wrapper& operator=(const reference_wrapper& x) noexcept = default;
+        constexpr T& get() const noexcept {return *ptr;}
+
+        constexpr operator T&() const noexcept {return *ptr;}
+
+        template <class... ArgTypes>
+        constexpr invoke_result_t<T&, ArgTypes&&...> operator()(ArgTypes&&... args) const{
+            if constexpr (is_object_v<T>)
+                static_assert(sizeof(T), "type must be complete");
+            return invoke(get(), forward<ArgTypes>(args)...);
+        }
+
+    };
+
+    template <typename _Signature>
+    class function;
+
+    template <typename _Ret, typename... _Args>
+    class function<_Ret(_Args...)>{
+    public:
+        using result_type = _Ret;
+    private:
+        enum class holder_type{
+            function_pointer,
+            other,
+            invalid
+        };
+        
+        struct functor_base{
+            virtual ~functor_base() = default;
+            virtual _Ret invoke(_Args&&...) = 0;
+            virtual functor_base* clone() = 0;
+        };
+
+        template <typename ObjectType>
+        struct functor_function_object : functor_base{
+            ObjectType object;
+
+            template<typename _ObjectType>
+            functor_function_object(_ObjectType&& obj) : object(std::forward<_ObjectType>(obj)){}
+
+            _Ret invoke(_Args&&... args) override{
+                return object(std::forward<_Args>(args)...);
+            }
+
+            functor_base* clone() override{
+                return new functor_function_object(object);
+            }
+
+            virtual ~functor_function_object() override{
+                object.~ObjectType();
+            }
+        };
+
+        template <typename ObjectType, typename... Args>
+        struct functor_member_function : functor_base{
+            _Ret (ObjectType::*memFuncPtr)(Args...);
+
+            functor_member_function(_Ret (ObjectType::*memFuncPtr)(Args...)) : memFuncPtr(memFuncPtr){}
+
+            
+            template<typename _ObjectType, typename... _ArgsTypes>
+            _Ret invoke_impl(_ObjectType&& obj, _ArgsTypes&&... args){
+                return (obj.*memFuncPtr)(std::forward<_ArgsTypes>(args)...);
+            }
+
+            _Ret invoke(_Args&&... args) override{
+                return invoke_impl(std::forward<_Args>(args)...);
+            }
+
+            functor_base* clone() override{
+                return new functor_member_function(memFuncPtr);
+            }
+        };
+
+        template <typename ObjectType>
+        struct functor_member_object : functor_base{
+            _Ret ObjectType::*memObjPtr;
+
+            functor_member_object(_Ret ObjectType::*memObjPtr) : memObjPtr(memObjPtr){}
+
+            template <typename _ObjectType>
+            _Ret invoke_impl(_ObjectType&& obj){
+                return obj.*memObjPtr;
+            }
+
+            _Ret invoke(_Args&&... args) override{
+                return invoke_impl(std::forward<_Args>(args)...);   
+            }
+
+            functor_base* clone() override{
+                return new functor_member_object(memObjPtr);
+            }
+
+        };
+
+        holder_type holderType;
+        union {
+            functor_base* functor;
+            _Ret (*function_pointer)(_Args...);
+        };
+        
+
+        template<typename T>
+        void init(T&& t){
+            holderType = holder_type::other;
+            functor = new functor_function_object<remove_reference_t<T>>(t);
+        }
+
+        void init(_Ret(*f)(_Args...)){
+            holderType = holder_type::function_pointer;
+            function_pointer = f;
+        }
+
+        template<typename T, typename... _FuncArgs>
+        void init(_Ret(T::*f)(_FuncArgs...)){
+            holderType = holder_type::other;
+            functor = new functor_member_function<T, _FuncArgs...>(f);
+        }
+
+        template<typename Data, typename T>
+        void init(Data T::*f){
+            holderType = holder_type::other;
+            functor = new functor_member_object<T>(f);
+        }
+
+        public:
+        function()noexcept : holderType(holder_type::invalid){}
+        function(nullptr_t)noexcept : holderType(holder_type::invalid){}
+        function(const function& other) {
+            holderType = other.holderType;
+            switch (holderType)
+            {
+            case holder_type::function_pointer:
+                function_pointer = other.function_pointer;
+                break;
+            case holder_type::other:
+                functor = other.functor->clone();
+                break;
+            default:
+                break;
+            }
+        }
+
+        function(function&& other)noexcept{
+            holderType = other.holderType;
+            other.holderType = holder_type::invalid;
+            switch (holderType)
+            {
+            case holder_type::function_pointer:
+                function_pointer = other.function_pointer;
+                other.function_pointer = nullptr;
+                break;
+            case holder_type::other:
+                functor = other.functor;
+                other.functor = nullptr;
+                break;
+            default:
+                break;
+            }
+        }
+
+        template <class F>
+        function(F&& f){
+            init(std::forward<F>(f));
+        }
+
+        ~function(){
+            switch (holderType)
+            {
+            case holder_type::function_pointer:
+                break;
+            case holder_type::other:
+                delete functor;
+                break;
+            default:
+                break;
+            }
+        }
+
+        void swap(function& other)noexcept{
+            holder_type tempType = holderType;
+            holderType = other.holderType;
+            other.holderType = tempType;
+            auto temp = other.functor;
+            other.functor = functor;
+            functor = temp;
+        }
+
+        function& operator=(const function& other){
+            function(other).swap(*this);
+            return *this;
+        }
+
+        function& operator=(function&& other)noexcept{
+            function(std::move(other)).swap(*this);
+            return *this;
+        }
+
+        function& operator=(nullptr_t)noexcept{
+            switch (holderType)
+            {
+            case holder_type::function_pointer:
+                function_pointer = nullptr;
+                break;
+            case holder_type::other:
+                delete functor;
+                functor = nullptr;
+                break;
+            default:
+                break;
+            }
+            holderType = holder_type::invalid;
+            return *this;
+        }
+
+        template <typename F>
+        function& operator=(F&& f){
+            function(std::forward<F>(f)).swap(*this);
+            return *this;
+        }
+
+        template <typename F>
+        function& operator=(std::reference_wrapper<F> f) noexcept{
+            function(f).swap(*this);
+            return *this;
+        }
+
+        explicit operator bool() const noexcept{
+            return holderType != holder_type::invalid;
+        }
+
+
+
+        _Ret operator()(_Args... args) const{
+            switch (holderType)
+            {
+            case holder_type::function_pointer:
+                return function_pointer(std::forward<_Args>(args)...);
+                break;
+            case holder_type::other:
+                return functor->invoke(std::forward<_Args>(args)...);
+                break;
+            default:
+                __asm__("hlt");
+                break;
+            }
+        }
+    };
+}
