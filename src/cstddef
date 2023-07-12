@@ -6,4 +6,7 @@
 namespace std {
 using size_t = decltype(sizeof(0));
 using ptrdiff_t = decltype(declval<int*>() - declval<int*>());
+using nullptr_t = decltype(nullptr);
 }
+
+#define offsetof(s, m) ((std::size_t) & reinterpret_cast<const volatile char&>((((s*)0)->m)))
