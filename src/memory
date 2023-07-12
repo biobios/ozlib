@@ -1,0 +1,13 @@
+#pragma once
+
+namespace std{
+    template <class T>
+    constexpr T* addressof(T& r) noexcept
+    {
+        return reinterpret_cast<T*>(
+            &const_cast<char&>(reinterpret_cast<const volatile char&>(r)));
+    }
+
+    template <class T>
+    const T* addressof(const T&&) = delete;
+}
