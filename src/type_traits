@@ -61,6 +61,15 @@ inline constexpr bool is_const_v = is_const<T>::value;
 template <typename T>
 struct is_function : bool_constant<!is_const_v<const T>> {};
 
+template <typename>
+struct is_array : false_type {};
+
+template <typename T, std::impl::size_t size>
+struct is_array<T[size]> : true_type {};
+
+template <typename T>
+struct is_array<T[]> : true_type {};
+
 template <typename T>
 struct is_function<T&> : public false_type {};
 
@@ -179,7 +188,7 @@ struct invoke_result_impl<enable_if_t<is_base_of_v<T, remove_cvref_t<T1>>>,
                           Ret (T::*)(Args...), T1, Args...> {
     using type = decltype(((std::impl::declval<T1>()).*
                            std::impl::declval<Ret (T::*)(Args...)>())(
-            std::impl::declval<Args>()...));
+        std::impl::declval<Args>()...));
 };
 }  // namespace helper
 
