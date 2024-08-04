@@ -1,6 +1,11 @@
 #pragma once
 
+#include <bits/default_delete.hpp>
+
 namespace std {
+
+using std::impl::default_delete;
+
 template <class T>
 constexpr T* addressof(T& r) noexcept {
     return reinterpret_cast<T*>(
@@ -9,4 +14,5 @@ constexpr T* addressof(T& r) noexcept {
 
 template <class T>
 const T* addressof(const T&&) = delete;
+
 }  // namespace std
