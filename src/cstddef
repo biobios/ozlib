@@ -1,12 +1,14 @@
 #pragma once
 
-#include <cstdint>
-#include <utility>
+#include <bits/nullptr_t.hpp>
+#include <bits/size_t.hpp>
 
 namespace std {
-using size_t = decltype(sizeof(0));
-using ptrdiff_t = decltype(declval<int*>() - declval<int*>());
-using nullptr_t = decltype(nullptr);
+using std::impl::nullptr_t;
+using std::impl::size_t;
+
+using ptrdiff_t =
+    decltype(reinterpret_cast<char*>(0) - reinterpret_cast<char*>(0));
 }  // namespace std
 
 #define offsetof(s, m) \

@@ -1,26 +1,15 @@
 #pragma once
 
-#include <type_traits>
+#include <bits/declval.hpp>
+#include <bits/forward.hpp>
+#include <bits/is_lvalue_reference.hpp>
+#include <bits/move.hpp>
+#include <bits/remove_reference.hpp>
 
 namespace std {
 
-template <class T>
-constexpr T&& forward(typename remove_reference<T>::type& t) noexcept {
-    return static_cast<T&&>(t);
-}
+using std::impl::declval;
+using std::impl::forward;
+using std::impl::move;
 
-template <class T>
-constexpr T&& forward(typename remove_reference<T>::type&& t) noexcept {
-    static_assert(!is_lvalue_reference<T>::value,
-                  "Can not forward an rvalue as an lvalue.");
-    return static_cast<T&&>(t);
-}
-
-template <class T>
-constexpr typename remove_reference<T>::type&& move(T&& t) noexcept {
-    return static_cast<typename remove_reference<T>::type&&>(t);
-}
-
-template <class T>
-typename add_rvalue_reference<T>::type declval() noexcept;
 }  // namespace std
