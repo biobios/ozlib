@@ -1,15 +1,11 @@
 #pragma once
 
 #include <bits/add_rvalue_reference.hpp>
-#include <bits/is_convertible.hpp>
+#include <bits/convertible.hpp>
 #include <bits/same.hpp>
 
 namespace std {
+using std::impl::convertible_to;
 using std::impl::same_as;
 
-template <class From, class To>
-concept convertible_to = impl::is_convertible_v<From, To> &&
-                         requires(impl::add_rvalue_reference_t<From> (&f)()) {
-                             static_cast<To>(f());
-                         };
 }  // namespace std
