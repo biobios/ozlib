@@ -1,5 +1,5 @@
 COMPILER = clang++
-CFLAGS = -O2 -Wall -g --target=x86_64-unknown-none-elf -g -ffreestanding -mno-red-zone -fno-exceptions -fno-rtti -std=c++20 -I $(INCLUDEDIR)
+CFLAGS = -O2 -Wall -g --target=x86_64-unknown-none-elf -g -ffreestanding -mno-red-zone -fno-exceptions -fno-rtti -std=c++20 -I $(SRCDIR)
 HEADERS = $(filter-out %bits, $(filter-out %common, $(filter-out %spec, $(notdir $(wildcard $(SRCDIR)*)))))
 INCLUDEDIR = ./include/
 SRCDIR = ./src/
@@ -74,5 +74,6 @@ compile_commands.json:
 lint:
 	$(foreach file, $(SPECSRC), clang-tidy -p ./ $(file);)
 	$(foreach file, $(COMMONSRC), clang-tidy -p ./ $(file);)
+	$(foreach file, $(TESTSRC), clang-tidy -p ./ $(file);)
 
 .PHONY: setup copyheaders copybits clean build test lint
