@@ -126,11 +126,11 @@ inline constexpr invoke_result_t<Callable, Args...> invoke(Callable&& f,
 template <class T>
 class reference_wrapper {
     // トリビアルコピー可能である
-    T* ptr;
+    T* _ptr;
 
-    static constexpr T* _S_fun(T& t) noexcept { return addressof(t); }
+    static constexpr T* s_fun(T& t) noexcept { return addressof(t); }
 
-    static void _S_fun(T&&) = delete;
+    static void s_fun(T&&) = delete;
 
    public:
     using type = T;
@@ -138,19 +138,19 @@ class reference_wrapper {
     template <
         class U,
         class = enable_if<!is_same_v<reference_wrapper, remove_cvref_t<U>>>,
-        class = decltype(reference_wrapper::_S_fun(std::declval<U>()))>
+        class = decltype(reference_wrapper::s_fun(std::declval<U>()))>
     constexpr reference_wrapper(U&& u) noexcept(
-        noexcept(reference_wrapper::_S_fun(std::declval<U>())))
-        : ptr(reference_wrapper::_S_fun(std::forward<U>(u))) {}
+        noexcept(reference_wrapper::s_fun(std::declval<U>())))
+        : _ptr(reference_wrapper::s_fun(std::forward<U>(u))) {}
 
     constexpr reference_wrapper(const reference_wrapper& x) noexcept = default;
     ~reference_wrapper() noexcept = default;
 
     constexpr reference_wrapper& operator=(
         const reference_wrapper& x) noexcept = default;
-    constexpr T& get() const noexcept { return *ptr; }
+    constexpr T& get() const noexcept { return *_ptr; }
 
-    constexpr operator T&() const noexcept { return *ptr; }
+    constexpr operator T&() const noexcept { return *_ptr; }
 
     template <class... ArgTypes>
     constexpr invoke_result_t<T&, ArgTypes&&...> operator()(

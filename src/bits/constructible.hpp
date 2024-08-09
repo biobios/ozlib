@@ -19,8 +19,8 @@ struct is_constructible<T, Args...> : true_type {};
 template <typename T>
 struct is_default_constructible : is_constructible<T>::type {};
 
-template <typename T, size_t n>
-struct is_default_constructible<T[n]> : is_constructible<T>::type {};
+template <typename T, size_t N>
+struct is_default_constructible<T[N]> : is_constructible<T>::type {};
 
 // C++11準拠　C++14へ修正が必要
 template <typename T>

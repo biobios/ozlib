@@ -24,5 +24,6 @@ concept same_as =
     (helper_same_as::same_as_impl<T, U> && helper_same_as::same_as_impl<U, T>);
 
 namespace helper_same_as {};
+
 }  // namespace impl
 }  // namespace std

@@ -11,5 +11,6 @@ using ptrdiff_t =
     decltype(reinterpret_cast<char*>(0) - reinterpret_cast<char*>(0));
 }  // namespace std
 
+// NOLINTNEXTLINE(readability-identifier-naming)
 #define offsetof(s, m) \
     ((std::size_t) & reinterpret_cast<const volatile char&>((((s*)0)->m)))

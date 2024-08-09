@@ -6,10 +6,10 @@ namespace {
 namespace helper_add_rvalue_reference {
 
 template <typename T>
-using Ref = T&;
+using ref = T&;
 
 template <typename T>
-concept is_referenceable = requires { typename Ref<T>; };
+concept is_referenceable = requires { typename ref<T>; };
 }  // namespace helper_add_rvalue_reference
 }  // namespace
 
