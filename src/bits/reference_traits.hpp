@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bits/is_lvalue_reference.hpp>
+#include <bits/remove_reference.hpp>
 #include <bits/template_constants.hpp>
 
 namespace std {
@@ -21,6 +22,14 @@ struct is_reference
 
 template <class T>
 inline constexpr bool is_reference_v = is_reference<T>::value;
+
+template <typename T>
+struct add_lvalue_reference {
+    using type = remove_reference_t<T>&;
+};
+
+template <typename T>
+using add_lvalue_reference_t = typename add_lvalue_reference<T>::type;
 
 }  // namespace impl
 
