@@ -34,6 +34,24 @@ struct is_array<T> : true_type {};
 template <typename T>
 inline constexpr bool is_array_v = is_array<T>::value;
 
+template <typename T>
+struct remove_extent {
+    using type = T;
+};
+
+template <typename U, size_t N>
+struct remove_extent<U[N]> {
+    using type = U;
+};
+
+template <typename U>
+struct remove_extent<U[]> {
+    using type = U;
+};
+
+template <typename T>
+using remove_extent_t = typename remove_extent<T>::type;
+
 template <class T>
 struct remove_all_extents {
     using type = T;
