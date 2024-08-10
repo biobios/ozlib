@@ -28,7 +28,8 @@ template <typename>
 struct is_array : false_type {};
 
 template <typename T>
-struct is_array<T[]> : true_type {};
+    requires is_bounded_array_v<T> || is_unbounded_array_v<T>
+struct is_array<T> : true_type {};
 
 template <typename T>
 inline constexpr bool is_array_v = is_array<T>::value;
