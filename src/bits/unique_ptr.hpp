@@ -2,6 +2,7 @@
 
 #include <bits/array_traits.hpp>
 #include <bits/assignable.hpp>
+#include <bits/constructible.hpp>
 #include <bits/default_delete.hpp>
 #include <bits/forward.hpp>
 #include <bits/move.hpp>
@@ -33,18 +34,6 @@ class unique_ptr {
         using type = typename Del::pointer;
     };
 
-    static constexpr bool deleter_default_constructible = requires {
-        { D() } noexcept;
-    };
-    static constexpr bool deleter_copy_constructible = requires(const D& d) {
-        { D(d) } noexcept;
-    };
-
-    // Dが左辺値参照ならば、deleter_move_constructibleはdeleter_copy_constructibleと同じ
-    static constexpr bool deleter_move_constructible = requires(D&& d) {
-        { D(forward<D>(d)) } noexcept;
-    };
-
    public:
     using pointer = typename get_pointer_type<T, D>::type;
     using deleter_type = D;
@@ -56,27 +45,30 @@ class unique_ptr {
 
    public:
     constexpr unique_ptr() noexcept
-        requires(deleter_default_constructible && !is_pointer_v<deleter_type>)
+        requires(is_nothrow_default_constructible_v<deleter_type> &&
+                 !is_pointer_v<deleter_type>)
         : _ptr(nullptr), _deleter() {}
 
     constexpr explicit unique_ptr(pointer p) noexcept
-        requires(deleter_default_constructible && !is_pointer_v<deleter_type>)
+        requires(is_nothrow_default_constructible_v<deleter_type> &&
+                 !is_pointer_v<deleter_type>)
         : _ptr(p), _deleter() {}
 
     constexpr unique_ptr(pointer p, const D& d1) noexcept
-        requires deleter_copy_constructible
+        requires is_nothrow_copy_constructible_v<deleter_type>
         : _ptr(p), _deleter(d1) {}
 
     constexpr unique_ptr(pointer p, D&& d2) noexcept
-        requires deleter_move_constructible
+        requires is_nothrow_move_constructible_v<deleter_type>
         : _ptr(p), _deleter(forward<D>(d2)) {}
 
     constexpr unique_ptr(unique_ptr&& u) noexcept
-        requires deleter_move_constructible
+        requires is_nothrow_move_constructible_v<deleter_type>
         : _ptr(u.release()), _deleter(forward<D>(u.get_deleter())) {}
 
     constexpr unique_ptr(nullptr_t) noexcept
-        requires(deleter_default_constructible && !is_pointer_v<deleter_type>)
+        requires(is_nothrow_default_constructible_v<deleter_type> &&
+                 !is_pointer_v<deleter_type>)
         : _ptr(nullptr), _deleter() {}
 
     template <typename U, typename E>
