@@ -1,10 +1,12 @@
 #pragma once
 
 #include <bits/default_delete.hpp>
+#include <bits/unique_ptr.hpp>
 
 namespace std {
 
 using std::impl::default_delete;
+using std::impl::unique_ptr;
 
 template <class T>
 constexpr T* addressof(T& r) noexcept {
