@@ -3,6 +3,7 @@
 #include <bits/is_lvalue_reference.hpp>
 #include <bits/remove_reference.hpp>
 #include <bits/template_constants.hpp>
+#include <bits/type_identity.hpp>
 
 namespace std {
 namespace impl {
@@ -36,6 +37,20 @@ struct add_lvalue_reference<T> {
 
 template <typename T>
 using add_lvalue_reference_t = typename add_lvalue_reference<T>::type;
+
+template <typename T>
+struct add_rvalue_reference {
+    using type = T;
+};
+
+template <typename T>
+    requires(requires { typename type_identity<T&&>::type; })
+struct add_rvalue_reference<T> {
+    using type = T&&;
+};
+
+template <typename T>
+using add_rvalue_reference_t = typename add_rvalue_reference<T>::type;
 
 }  // namespace impl
 

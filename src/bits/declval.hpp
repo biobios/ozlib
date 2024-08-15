@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bits/add_rvalue_reference.hpp>
+#include <bits/reference_traits.hpp>
 
 namespace std {
 namespace impl {
