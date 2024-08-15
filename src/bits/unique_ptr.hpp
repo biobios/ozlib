@@ -171,11 +171,15 @@ class unique_ptr<T[], D> {
     using deleter_type = D;
     using element_type = T;
 
+   private:
+    pointer _ptr;
+    deleter_type _deleter;
+
+   public:
     constexpr unique_ptr() noexcept
         requires(is_nothrow_default_constructible_v<deleter_type> &&
                  !is_pointer_v<deleter_type>)
         : _ptr(nullptr), _deleter() {}
-    {}
 
     template <typename U>
         requires(is_nothrow_default_constructible_v<deleter_type> &&
