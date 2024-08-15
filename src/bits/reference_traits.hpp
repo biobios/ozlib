@@ -25,6 +25,12 @@ inline constexpr bool is_reference_v = is_reference<T>::value;
 
 template <typename T>
 struct add_lvalue_reference {
+    using type = T;
+};
+
+template <typename T>
+    requires(requires { typename type_identity<remove_reference_t<T>&>::type; })
+struct add_lvalue_reference<T> {
     using type = remove_reference_t<T>&;
 };
 
