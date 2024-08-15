@@ -3,7 +3,6 @@
 #include <bits/array_traits.hpp>
 #include <bits/constructible.hpp>
 #include <bits/convertible.hpp>
-#include <bits/cv_ope.hpp>
 #include <bits/cv_traits.hpp>
 #include <bits/declval.hpp>
 #include <bits/function_traits.hpp>

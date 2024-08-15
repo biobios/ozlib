@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bits/array_traits.hpp>
-#include <bits/cv_ope.hpp>
+#include <bits/cv_traits.hpp>
 #include <bits/function_traits.hpp>
 #include <bits/reference_traits.hpp>
 #include <bits/same.hpp>
