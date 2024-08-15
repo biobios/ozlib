@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bits/remove_reference.hpp>
+#include <bits/reference_traits.hpp>
 
 namespace std {
 namespace impl {

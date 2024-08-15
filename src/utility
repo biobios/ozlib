@@ -3,7 +3,6 @@
 #include <bits/declval.hpp>
 #include <bits/forward.hpp>
 #include <bits/move.hpp>
-#include <bits/remove_reference.hpp>
 
 namespace std {
 

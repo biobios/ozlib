@@ -1,11 +1,28 @@
 #pragma once
 
-#include <bits/remove_reference.hpp>
 #include <bits/template_constants.hpp>
 #include <bits/type_identity.hpp>
 
 namespace std {
 namespace impl {
+
+template <typename T>
+struct remove_reference {
+    using type = T;
+};
+
+template <typename T>
+struct remove_reference<T&> {
+    using type = T;
+};
+
+template <typename T>
+struct remove_reference<T&&> {
+    using type = T;
+};
+
+template <typename T>
+using remove_reference_t = typename remove_reference<T>::type;
 
 template <typename T>
 struct is_lvalue_reference : false_type {};
