@@ -7,7 +7,6 @@
 #include <bits/cv_traits.hpp>
 #include <bits/declval.hpp>
 #include <bits/function_traits.hpp>
-#include <bits/is_lvalue_reference.hpp>
 #include <bits/is_void.hpp>
 #include <bits/reference_traits.hpp>
 #include <bits/remove_reference.hpp>

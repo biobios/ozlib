@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bits/is_lvalue_reference.hpp>
+#include <bits/reference_traits.hpp>
 #include <bits/remove_reference.hpp>
 
 namespace std {

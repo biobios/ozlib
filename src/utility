@@ -2,7 +2,6 @@
 
 #include <bits/declval.hpp>
 #include <bits/forward.hpp>
-#include <bits/is_lvalue_reference.hpp>
 #include <bits/move.hpp>
 #include <bits/remove_reference.hpp>
 

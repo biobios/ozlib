@@ -4,7 +4,6 @@
 #include <bits/decay.hpp>
 #include <bits/declval.hpp>
 #include <bits/forward.hpp>
-#include <bits/is_lvalue_reference.hpp>
 #include <bits/nullptr_t.hpp>
 #include <bits/reference_traits.hpp>
 

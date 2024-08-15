@@ -1,12 +1,20 @@
 #pragma once
 
-#include <bits/is_lvalue_reference.hpp>
 #include <bits/remove_reference.hpp>
 #include <bits/template_constants.hpp>
 #include <bits/type_identity.hpp>
 
 namespace std {
 namespace impl {
+
+template <typename T>
+struct is_lvalue_reference : false_type {};
+
+template <typename T>
+struct is_lvalue_reference<T&> : true_type {};
+
+template <typename T>
+inline constexpr bool is_lvalue_reference_v = is_lvalue_reference<T>::value;
 
 template <class T>
 struct is_rvalue_reference : false_type {};
