@@ -1,14 +1,14 @@
 #pragma once
 
 #include <bits/nullptr_t.hpp>
+#include <bits/ptrdiff_t.hpp>
 #include <bits/size_t.hpp>
 
 namespace std {
 using std::impl::nullptr_t;
+using std::impl::ptrdiff_t;
 using std::impl::size_t;
 
-using ptrdiff_t =
-    decltype(reinterpret_cast<char*>(0) - reinterpret_cast<char*>(0));
 }  // namespace std
 
 // NOLINTNEXTLINE(readability-identifier-naming)
