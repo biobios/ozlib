@@ -1,17 +1,19 @@
 #pragma once
 
-#include <cstddef>
-#include <utility>
+#include <bits/exception_helper.hpp>
+#include <bits/ptrdiff_t.hpp>
+#include <bits/size_t.hpp>
+#include <bits/swap.hpp>
 
 namespace std {
-template <class T, size_t N>
+template <class T, impl::size_t N>
 struct array {
     // NOLINTNEXTLINE(readability-identifier-naming)
     T _data[N];
     using reference = T&;
     using const_reference = const T&;
-    using size_type = size_t;
-    using difference_type = decltype(declval<T*>() - declval<T*>());
+    using size_type = impl::size_t;
+    using difference_type = impl::ptrdiff_t;
     using pointer = T*;
     using const_pointer = const T*;
     using value_type = T;
