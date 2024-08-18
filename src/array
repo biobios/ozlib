@@ -36,5 +36,13 @@ struct array {
     constexpr const_reference back() const { return _data[N - 1]; }
     constexpr T* data() noexcept { return &_data[0]; }
     constexpr const T* data() const noexcept { return &_data[0]; }
+    constexpr void fill(const T& u) {
+        for (size_type i = 0; i < N; ++i) _data[i] = u;
+    }
+
+    constexpr void swap(array& other) noexcept(
+        noexcept(impl::swap(impl::declval<T&>(), impl::declval<T&>()))) {
+        for (size_type i = 0; i < N; ++i) impl::swap(_data[i], other._data[i]);
+    }
 };
 }  // namespace std
