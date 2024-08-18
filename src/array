@@ -20,8 +20,14 @@ struct array {
     [[nodiscard]] constexpr bool empty() const noexcept { return N == 0; }
     constexpr size_type size() const noexcept { return N; }
     constexpr size_type max_size() const noexcept { return N; }
-    constexpr reference at(size_type n) { return _data[n]; }
-    constexpr const_reference at(size_type n) const { return _data[n]; }
+    constexpr reference at(size_type n) {
+        if (n >= N) ozlib_exception_helper::throw_out_of_range("array::at");
+        return _data[n];
+    }
+    constexpr const_reference at(size_type n) const {
+        if (n >= N) ozlib_exception_helper::throw_out_of_range("array::at");
+        return _data[n];
+    }
     constexpr reference operator[](size_type n) { return _data[n]; }
     constexpr const_reference operator[](size_type n) const { return _data[n]; }
     constexpr reference front() { return _data[0]; }
