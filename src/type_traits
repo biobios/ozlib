@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bits/array_traits.hpp>
+#include <bits/compound_traits.hpp>
 #include <bits/constructible.hpp>
 #include <bits/convertible.hpp>
 #include <bits/cv_traits.hpp>
@@ -29,6 +30,8 @@ using std::impl::is_function;
 using std::impl::is_function_v;
 using std::impl::is_lvalue_reference;
 using std::impl::is_lvalue_reference_v;
+using std::impl::is_object;
+using std::impl::is_object_v;
 using std::impl::is_reference;
 using std::impl::is_reference_v;
 using std::impl::is_rvalue_reference;
@@ -63,13 +66,7 @@ struct enable_if<true, T> {
 template <bool Condition, class T = void>
 using enable_if_t = typename enable_if<Condition, T>::type;
 
-template <class T>
-struct is_object
-    : bool_constant<!is_function_v<T> && !is_reference_v<T> && !is_void_v<T>> {
-};
 
-template <class T>
-inline constexpr bool is_object_v = is_object<T>::value;
 
 
 
