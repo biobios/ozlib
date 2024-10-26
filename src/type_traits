@@ -6,6 +6,7 @@
 #include <bits/convertible.hpp>
 #include <bits/cv_traits.hpp>
 #include <bits/cvref_traits.hpp>
+#include <bits/decay.hpp>
 #include <bits/declval.hpp>
 #include <bits/function_traits.hpp>
 #include <bits/is_void.hpp>
@@ -16,6 +17,8 @@
 
 namespace std {
 using std::impl::bool_constant;
+using std::impl::decay;
+using std::impl::decay_t;
 using std::impl::false_type;
 using std::impl::integral_constant;
 using std::impl::is_array;
@@ -65,10 +68,6 @@ struct enable_if<true, T> {
 
 template <bool Condition, class T = void>
 using enable_if_t = typename enable_if<Condition, T>::type;
-
-
-
-
 
 #ifdef __GNUC__
 template <typename Base, typename Derived>

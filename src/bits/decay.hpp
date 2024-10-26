@@ -4,8 +4,6 @@
 #include <bits/cv_traits.hpp>
 #include <bits/function_traits.hpp>
 #include <bits/reference_traits.hpp>
-#include <bits/same.hpp>
-#include <bits/size_t.hpp>
 
 namespace std {
 namespace impl {
@@ -26,6 +24,9 @@ template <class T>
 struct decay<T> {
     using type = remove_reference_t<T>*;
 };
+
+template <class T>
+using decay_t = typename decay<T>::type;
 
 }  // namespace impl
 }  // namespace std
