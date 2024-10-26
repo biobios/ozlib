@@ -2,6 +2,7 @@
 
 #include <bits/assignable.hpp>
 #include <bits/constructible.hpp>
+#include <bits/move.hpp>
 #include <bits/size_t.hpp>
 
 namespace std {
@@ -10,9 +11,9 @@ namespace impl {
 template <typename T>
 constexpr void swap(T& a, T& b) noexcept(is_nothrow_move_constructible_v<T> &&
                                          is_nothrow_move_assignable_v<T>) {
-    T tmp(std::move(a));
-    a = std::move(b);
-    b = std::move(tmp);
+    T tmp(std::impl::move(a));
+    a = std::impl::move(b);
+    b = std::impl::move(tmp);
 }
 
 template <typename T, size_t N>
