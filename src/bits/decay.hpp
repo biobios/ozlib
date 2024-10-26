@@ -18,7 +18,7 @@ struct decay {
 template <class T>
     requires is_array_v<remove_reference<T>>
 struct decay<T> {
-    using type = remove_all_extents_t<remove_reference_t<T>>;
+    using type = remove_all_extents_t<remove_reference_t<T>>*;
 };
 
 template <class T>
