@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bits/convertible.hpp>
-#include <bits/is_void.hpp>
+#include <bits/fundamental_traits.hpp>
 
 namespace std {
 namespace impl {

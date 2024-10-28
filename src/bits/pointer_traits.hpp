@@ -32,15 +32,5 @@ namespace helper_remove_pointer {}
 template <typename T>
 using remove_pointer_t = typename remove_pointer<T>::type;
 
-template <typename T>
-struct is_pointer : false_type {};
-
-template <typename T>
-    requires(!is_same_v<remove_pointer_t<T>, T>)
-struct is_pointer<T> : true_type {};
-
-template <typename T>
-inline constexpr bool is_pointer_v = is_pointer<T>::value;
-
 }  // namespace impl
 }  // namespace std
