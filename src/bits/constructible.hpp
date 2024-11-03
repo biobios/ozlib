@@ -16,8 +16,8 @@ template <typename T, typename... Args>
     requires(requires(Args... args) { T(args...); } && !is_void_v<T>)
 struct is_constructible<T, Args...> : true_type {};
 
-template <typename T>
-inline constexpr bool is_constructible_v = is_constructible<T>::value;
+template <typename T, typename... Args>
+inline constexpr bool is_constructible_v = is_constructible<T, Args...>::value;
 
 template <typename T>
 struct is_default_constructible : is_constructible<T>::type {};
