@@ -48,5 +48,18 @@ class reference_wrapper {
     }
 };
 
+template <class T>
+constexpr reference_wrapper<T> ref(T& t) noexcept {
+    return reference_wrapper<T>(t);
+}
+
+template <class T>
+constexpr reference_wrapper<T> ref(reference_wrapper<T> t) noexcept {
+    return t;
+}
+
+template <class T>
+void ref(const T&&) = delete;
+
 }  // namespace impl
 }  // namespace std
