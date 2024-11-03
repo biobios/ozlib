@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bits/declval.hpp>
-#include <bits/is_void.hpp>
+#include <bits/fundamental_traits.hpp>
 #include <bits/same.hpp>
 #include <bits/size_t.hpp>
 #include <bits/template_constants.hpp>
