@@ -11,66 +11,63 @@ namespace impl {
 template <typename T>
 class reference_wrapper;
 
-namespace helper {
-template <typename VOID, typename T, typename... Args>
-struct invoke_result_impl {
-    using type =
-        decltype(std::impl::declval<T>()(std::impl::declval<Args>()...));
+template <typename...>
+struct invoke_result {};
+
+template <typename R, typename T1, typename... Args1, typename T2,
+          typename... Args2>
+    requires(is_base_of_v<T1, remove_cvref_t<T2>> &&
+             requires(R (T1::*f)(Args1...), T2 t2, Args2... args2) {
+                 (t2.*f)(args2...);
+             })
+struct invoke_result<R (T1::*)(Args1...), T2, Args2...> {
+    using type = R;
 };
 
-template <typename Ret, typename T>
-struct invoke_result_impl<void, Ret(T::*), T*> {
-    using type =
-        decltype(*(std::impl::declval<T*>()).*(std::impl::declval<Ret(T::*)>));
+template <typename R, typename T1, typename... Args1, typename T2,
+          typename... Args2>
+    requires(is_same_v<reference_wrapper<T1>, remove_cvref_t<T2>> &&
+             requires(R (T1::*f)(Args1...), T2 t2, Args2... args2) {
+                 (t2.get().*f)(args2...);
+             })
+struct invoke_result<R (T1::*)(Args1...), T2, Args2...> {
+    using type = R;
 };
 
-template <typename Ret, typename T, typename Arg>
-struct invoke_result_impl<
-    enable_if_t<is_same_v<reference_wrapper<T>, remove_cvref_t<Arg>> &&
-                !is_function_v<Ret>>,
-    Ret(T::*), Arg> {
-    using type = decltype((std::impl::declval<Arg>.get()).*
-                          (std::impl::declval<Ret(T::*)>()));
+template <typename R, typename T1, typename... Args1, typename T2,
+          typename... Args2>
+    requires(requires(R (T1::*f)(Args1...), T2 t2, Args2... args2) {
+        ((*t2).*f)(args2...);
+    })
+struct invoke_result<R (T1::*)(Args1...), T2, Args2...> {
+    using type = R;
 };
 
-template <typename Ret, typename T, typename Arg>
-struct invoke_result_impl<
-    enable_if_t<is_base_of_v<T, remove_cvref_t<Arg>> && !is_function_v<Ret>>,
-    Ret(T::*), Arg> {
-    using type = decltype((std::impl::declval<Arg>()).*
-                          (std::impl::declval<Ret(T::*)>()));
+template <typename R, typename T, typename Arg>
+    requires(is_base_of_v<T, remove_cvref_t<Arg>> &&
+             requires(R T::*f, Arg t1) { (t1.*f); })
+struct invoke_result<R T::*, Arg> {
+    using type = R;
 };
 
-template <typename Ret, typename T, typename T1, typename... Args>
-struct invoke_result_impl<
-    enable_if_t<!is_same_v<reference_wrapper<T>, remove_cvref_t<T1>> &&
-                !is_base_of_v<T, remove_cvref_t<T1>>>,
-    Ret (T::*)(Args...), T1, Args...> {
-    using type = decltype((*std::impl::declval<T1>()).*
-                          (std::impl::declval<Ret (T::*)(Args...)>(
-                              std::impl::declval<Args>()...)));
+template <typename R, typename T, typename Arg>
+    requires(is_same_v<reference_wrapper<T>, remove_cvref_t<Arg>> &&
+             requires(R T::*f, Arg t1) { (t1.get().*f); })
+struct invoke_result<R T::*, Arg> {
+    using type = R;
 };
 
-template <typename Ret, typename T, typename T1, typename... Args>
-struct invoke_result_impl<
-    enable_if_t<is_same_v<reference_wrapper<T>, remove_cvref_t<T1>>>,
-    Ret (T::*)(Args...), T1, Args...> {
-    using type = decltype(((std::impl::declval<T1>.get()).*
-                           declval<Ret (T::*)(Args...)>())(
-        std::impl::declval<Args>()...));
+template <typename R, typename T, typename Arg>
+    requires(requires(R T::*f, Arg t1) { ((*t1).*f); })
+struct invoke_result<R T::*, Arg> {
+    using type = R;
 };
 
-template <typename Ret, typename T, typename T1, typename... Args>
-struct invoke_result_impl<enable_if_t<is_base_of_v<T, remove_cvref_t<T1>>>,
-                          Ret (T::*)(Args...), T1, Args...> {
-    using type = decltype(((std::impl::declval<T1>()).*
-                           std::impl::declval<Ret (T::*)(Args...)>())(
-        std::impl::declval<Args>()...));
+template <typename F, typename... Args>
+    requires(requires(F f, Args... args) { f(args...); })
+struct invoke_result<F, Args...> {
+    using type = decltype(declval<F>()(declval<Args>()...));
 };
-}  // namespace helper
-
-template <typename T, typename... Args>
-struct invoke_result : helper::invoke_result_impl<void, T, Args...> {};
 
 template <typename T, typename... Args>
 using invoke_result_t = typename invoke_result<T, Args...>::type;
