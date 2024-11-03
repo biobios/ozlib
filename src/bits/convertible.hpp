@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bits/declval.hpp>
-#include <bits/void_t.hpp>
 
 namespace std {
 namespace impl {
