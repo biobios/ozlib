@@ -14,5 +14,18 @@ struct enable_if<true, T> {
 template <bool Condition, class T = void>
 using enable_if_t = typename enable_if<Condition, T>::type;
 
+template <bool Condition, class T, class F>
+struct conditional {
+    using type = F;
+};
+
+template <class T, class F>
+struct conditional<true, T, F> {
+    using type = T;
+};
+
+template <bool Condition, class T, class F>
+using conditional_t = typename conditional<Condition, T, F>::type;
+
 }  // namespace impl
 }  // namespace std
