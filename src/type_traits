@@ -9,19 +9,29 @@
 #include <bits/decay.hpp>
 #include <bits/declval.hpp>
 #include <bits/fundamental_traits.hpp>
+#include <bits/inheritance_traits.hpp>
+#include <bits/invoke_traits.hpp>
 #include <bits/reference_traits.hpp>
 #include <bits/same.hpp>
 #include <bits/size_t.hpp>
 #include <bits/template_constants.hpp>
+#include <bits/template_logics.hpp>
+#include <bits/void_t.hpp>
 
 namespace std {
 using std::impl::bool_constant;
 using std::impl::decay;
 using std::impl::decay_t;
+using std::impl::enable_if;
+using std::impl::enable_if_t;
 using std::impl::false_type;
 using std::impl::integral_constant;
+using std::impl::invoke_result;
+using std::impl::invoke_result_t;
 using std::impl::is_array;
 using std::impl::is_array_v;
+using std::impl::is_base_of;
+using std::impl::is_base_of_v;
 using std::impl::is_const;
 using std::impl::is_const_v;
 using std::impl::is_constructible;
@@ -49,110 +59,6 @@ using std::impl::remove_cvref_t;
 using std::impl::remove_reference;
 using std::impl::remove_reference_t;
 using std::impl::true_type;
-
-// forward declarations
-template <class T>
-class reference_wrapper;
-
-template <class...>
-using void_t = void;
-
-template <bool Condition, class T = void>
-struct enable_if {};
-
-template <typename T>
-struct enable_if<true, T> {
-    using type = T;
-};
-
-template <bool Condition, class T = void>
-using enable_if_t = typename enable_if<Condition, T>::type;
-
-#ifdef __GNUC__
-template <typename Base, typename Derived>
-struct is_base_of : bool_constant<__is_base_of(Base, Derived)> {};
-#else
-
-namespace helper {
-
-template <typename Base, typename Derived, typename = void>
-struct is_base_of_impl : false_type {};
-
-template <typename Base, typename Derived>
-struct is_base_of_impl<Base, Derived,
-                       void_t<decltype(static_cast<remove_cv_t<Base>*>(
-                           declval<remove_cv_t<Derived>*>()))>> : true_type {};
-}  // namespace helper
-
-template <typename Base, typename Derived>
-struct is_base_of : helper::is_base_of_impl<Base, Derived> {};
-#endif
-
-template <typename Base, typename Derived>
-inline constexpr bool is_base_of_v = is_base_of<Base, Derived>::value;
-
-namespace helper {
-template <typename VOID, typename T, typename... Args>
-struct invoke_result_impl {
-    using type =
-        decltype(std::impl::declval<T>()(std::impl::declval<Args>()...));
-};
-
-template <typename Ret, typename T>
-struct invoke_result_impl<void, Ret(T::*), T*> {
-    using type =
-        decltype(*(std::impl::declval<T*>()).*(std::impl::declval<Ret(T::*)>));
-};
-
-template <typename Ret, typename T, typename Arg>
-struct invoke_result_impl<
-    enable_if_t<is_same_v<reference_wrapper<T>, remove_cvref_t<Arg>> &&
-                !is_function_v<Ret>>,
-    Ret(T::*), Arg> {
-    using type = decltype((std::impl::declval<Arg>.get()).*
-                          (std::impl::declval<Ret(T::*)>()));
-};
-
-template <typename Ret, typename T, typename Arg>
-struct invoke_result_impl<
-    enable_if_t<is_base_of_v<T, remove_cvref_t<Arg>> && !is_function_v<Ret>>,
-    Ret(T::*), Arg> {
-    using type = decltype((std::impl::declval<Arg>()).*
-                          (std::impl::declval<Ret(T::*)>()));
-};
-
-template <typename Ret, typename T, typename T1, typename... Args>
-struct invoke_result_impl<
-    enable_if_t<!is_same_v<reference_wrapper<T>, remove_cvref_t<T1>> &&
-                !is_base_of_v<T, remove_cvref_t<T1>>>,
-    Ret (T::*)(Args...), T1, Args...> {
-    using type = decltype((*std::impl::declval<T1>()).*
-                          (std::impl::declval<Ret (T::*)(Args...)>(
-                              std::impl::declval<Args>()...)));
-};
-
-template <typename Ret, typename T, typename T1, typename... Args>
-struct invoke_result_impl<
-    enable_if_t<is_same_v<reference_wrapper<T>, remove_cvref_t<T1>>>,
-    Ret (T::*)(Args...), T1, Args...> {
-    using type = decltype(((std::impl::declval<T1>.get()).*
-                           declval<Ret (T::*)(Args...)>())(
-        std::impl::declval<Args>()...));
-};
-
-template <typename Ret, typename T, typename T1, typename... Args>
-struct invoke_result_impl<enable_if_t<is_base_of_v<T, remove_cvref_t<T1>>>,
-                          Ret (T::*)(Args...), T1, Args...> {
-    using type = decltype(((std::impl::declval<T1>()).*
-                           std::impl::declval<Ret (T::*)(Args...)>())(
-        std::impl::declval<Args>()...));
-};
-}  // namespace helper
-
-template <typename T, typename... Args>
-struct invoke_result : helper::invoke_result_impl<void, T, Args...> {};
-
-template <typename T, typename... Args>
-using invoke_result_t = typename invoke_result<T, Args...>::type;
+using std::impl::void_t;
 
 }  // namespace std
