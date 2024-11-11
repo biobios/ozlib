@@ -17,7 +17,8 @@ namespace helper_invoke {
 template <typename F, typename... Args>
 struct invoke_helper {
     template <typename Callable>
-    inline static constexpr auto invoke(Callable&& f, Args&&... args) {
+    inline static constexpr decltype(auto) invoke(Callable&& f,
+                                                  Args&&... args) {
         return forward<Callable>(f)(forward<Args>(args)...);
     }
 };
@@ -25,7 +26,8 @@ struct invoke_helper {
 template <typename F, typename T1, typename T2, typename... Args>
     requires(is_base_of_v<T1, remove_cvref_t<T2>> && is_function_v<F>)
 struct invoke_helper<F T1::*, T2, Args...> {
-    inline static constexpr auto invoke(F T1::*f, T2&& t2, Args&&... args) {
+    inline static constexpr decltype(auto) invoke(F T1::*f, T2&& t2,
+                                                  Args&&... args) {
         return (forward<T2>(t2).*f)(forward<Args>(args)...);
     }
 };
@@ -34,7 +36,8 @@ template <typename F, typename T1, typename T2, typename... Args>
     requires(is_same_v<reference_wrapper<T1>, remove_cvref_t<T2>> &&
              is_function_v<F>)
 struct invoke_helper<F T1::*, T2, Args...> {
-    inline static constexpr auto invoke(F T1::*f, T2&& t2, Args&&... args) {
+    inline static constexpr decltype(auto) invoke(F T1::*f, T2&& t2,
+                                                  Args&&... args) {
         return (t2.get().*f)(forward<Args>(args)...);
     }
 };
@@ -44,7 +47,8 @@ template <typename F, typename T1, typename T2, typename... Args>
              !(is_base_of_v<T1, remove_cvref_t<T2>> ||
                is_same_v<reference_wrapper<T1>, remove_cvref_t<T2>>))
 struct invoke_helper<F T1::*, T2, Args...> {
-    inline static constexpr auto invoke(F T1::*f, T2&& t2, Args&&... args) {
+    inline static constexpr decltype(auto) invoke(F T1::*f, T2&& t2,
+                                                  Args&&... args) {
         return ((*t2).*f)(forward<Args>(args)...);
     }
 };
@@ -52,14 +56,16 @@ struct invoke_helper<F T1::*, T2, Args...> {
 template <typename R, typename T, typename Arg>
     requires(is_base_of_v<T, remove_cvref_t<Arg>> && !is_function_v<R>)
 struct invoke_helper<R T::*, Arg> {
-    inline static constexpr R invoke(R T::*f, Arg&& t1) { return (t1.*f); }
+    inline static constexpr decltype(auto) invoke(R T::*f, Arg&& t1) {
+        return (forward<Arg>(t1).*f);
+    }
 };
 
 template <typename R, typename T, typename Arg>
     requires(is_same_v<reference_wrapper<T>, remove_cvref_t<Arg>> &&
              !is_function_v<R>)
 struct invoke_helper<R T::*, Arg> {
-    inline static constexpr R invoke(R T::*f, Arg&& t1) {
+    inline static constexpr decltype(auto) invoke(R T::*f, Arg&& t1) {
         return (t1.get().*f);
     }
 };
@@ -69,7 +75,9 @@ template <typename R, typename T, typename Arg>
              !(is_base_of_v<T, remove_cvref_t<Arg>> ||
                is_same_v<reference_wrapper<T>, remove_cvref_t<Arg>>))
 struct invoke_helper<R T::*, Arg> {
-    inline static constexpr R invoke(R T::*f, Arg&& t1) { return ((*t1).*f); }
+    inline static constexpr decltype(auto) invoke(R T::*f, Arg&& t1) {
+        return ((*t1).*f);
+    }
 };
 
 }  // namespace helper_invoke
