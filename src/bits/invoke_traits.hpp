@@ -47,7 +47,7 @@ template <typename R, typename T, typename Arg>
     requires(!is_function_v<R> && is_base_of_v<T, remove_cvref_t<Arg>> &&
              requires(R T::*f, Arg t1) { (t1.*f); })
 struct invoke_result_helper<R T::*, Arg> {
-    using type = R;
+    using type = decltype(declval<Arg>().*declval<R T::*>());
 };
 
 template <typename R, typename T, typename Arg>
@@ -55,13 +55,13 @@ template <typename R, typename T, typename Arg>
              is_same_v<reference_wrapper<T>, remove_cvref_t<Arg>> &&
              requires(R T::*f, Arg t1) { (t1.get().*f); })
 struct invoke_result_helper<R T::*, Arg> {
-    using type = R;
+    using type = decltype(declval<Arg>().get().*declval<R T::*>());
 };
 
 template <typename R, typename T, typename Arg>
     requires(!is_function_v<R> && requires(R T::*f, Arg t1) { ((*t1).*f); })
 struct invoke_result_helper<R T::*, Arg> {
-    using type = R;
+    using type = decltype((*declval<Arg>()).*declval<R T::*>());
 };
 
 template <typename F, typename... Args>
