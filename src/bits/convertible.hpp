@@ -9,7 +9,7 @@ template <typename From, typename To>
 struct is_convertible : false_type {};
 
 template <typename From, typename To>
-    requires(requires(From f, void(func)(To)) { func(f); })
+    requires(requires(void(func)(To)) { func(declval<From>()); })
 struct is_convertible<From, To> : true_type {};
 
 template <typename From, typename To>
