@@ -1,6 +1,10 @@
 #pragma once
 
+#include <bits/common_traits.hpp>
 #include <bits/declval.hpp>
+#include <bits/forward.hpp>
+#include <bits/reference_traits.hpp>
+#include <bits/same.hpp>
 
 namespace std {
 namespace impl {
@@ -52,6 +56,15 @@ struct is_nothrow_move_assignable : is_nothrow_assignable<T, T&&> {};
 template <typename T>
 inline constexpr bool is_nothrow_move_assignable_v =
     is_nothrow_move_assignable<T>::value;
+
+template <typename LHS, typename RHS>
+concept assignable_from =
+    is_lvalue_reference_v<LHS> &&
+    common_reference_with<const remove_reference_t<LHS>&,
+                          const remove_reference_t<RHS>&> &&
+    requires(LHS lhs, RHS&& rhs) {
+        { lhs = std::impl::forward<RHS>(rhs) } -> same_as<LHS>;
+    };
 
 }  // namespace impl
 }  // namespace std
