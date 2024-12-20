@@ -1,6 +1,8 @@
 #pragma once
 
+#include <bits/convertible.hpp>
 #include <bits/declval.hpp>
+#include <bits/destructible.hpp>
 #include <bits/fundamental_traits.hpp>
 #include <bits/same.hpp>
 #include <bits/size_t.hpp>
@@ -80,6 +82,25 @@ template <typename T>
 inline constexpr bool is_nothrow_move_constructible_v =
     is_nothrow_move_constructible<T>::value;
 
-}  // namespace impl
+// concepts
+template <typename T, typename... Args>
+concept constructible_from = destructible<T> && is_constructible_v<T, Args...>;
 
+template <typename T>
+concept move_constructible = constructible_from<T, T> && convertible_to<T, T>;
+
+template <typename T>
+concept copy_constructible =
+    move_constructible<T> && constructible_from<T, T&> &&
+    convertible_to<T&, T> && constructible_from<T, const T&> &&
+    convertible_to<const T&, T> && constructible_from<T, const T> &&
+    convertible_to<const T, T>;
+
+template <typename T>
+concept default_initializable = constructible_from<T> && requires {
+    T{};
+    (void)::new T;
+};
+
+}  // namespace impl
 }  // namespace std
