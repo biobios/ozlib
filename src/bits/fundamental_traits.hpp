@@ -207,5 +207,9 @@ inline constexpr bool is_class_v = is_class<T>::value;
 template <typename T>
 inline constexpr bool is_enum_v = is_enum<T>::value;
 
+// concepts
+template <typename T>
+concept integral = is_integral_v<T>;
+
 }  // namespace impl
 }  // namespace std
