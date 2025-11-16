@@ -210,6 +210,8 @@ inline constexpr bool is_enum_v = is_enum<T>::value;
 // concepts
 template <typename T>
 concept integral = is_integral_v<T>;
+template <typename T>
+concept floating_point = is_floating_point_v<T>;
 
 }  // namespace impl
 }  // namespace std
