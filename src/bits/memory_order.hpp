@@ -1,0 +1,21 @@
+#pragma once
+
+namespace std {
+namespace impl {
+
+enum class memory_order : int {
+    relaxed = 0,
+
+    acquire = 2,
+    release = 3,
+    acq_rel = 4,
+    seq_cst = 5,
+};
+inline constexpr memory_order memory_order_relaxed = memory_order::relaxed;
+inline constexpr memory_order memory_order_acquire = memory_order::acquire;
+inline constexpr memory_order memory_order_release = memory_order::release;
+inline constexpr memory_order memory_order_acq_rel = memory_order::acq_rel;
+inline constexpr memory_order memory_order_seq_cst = memory_order::seq_cst;
+
+}
+}
