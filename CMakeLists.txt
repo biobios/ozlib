@@ -15,6 +15,7 @@ target_compile_options(ozstd PRIVATE
     -g
     -ffreestanding
     -mno-red-zone
+    -mcmodel=kernel
     -fno-exceptions
     -fno-rtti
 )
@@ -34,6 +35,7 @@ target_compile_options(commonstd PRIVATE
     -g
     -ffreestanding
     -mno-red-zone
+    -mcmodel=kernel
     -fno-exceptions
     -fno-rtti
 )

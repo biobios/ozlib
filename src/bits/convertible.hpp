@@ -12,6 +12,9 @@ template <typename From, typename To>
     requires(requires(void(func)(To)) { func(declval<From>()); })
 struct is_convertible<From, To> : true_type {};
 
+template <>
+struct is_convertible<void, void> : true_type {};
+
 template <typename From, typename To>
 inline constexpr bool is_convertible_v = is_convertible<From, To>::value;
 

@@ -16,6 +16,7 @@
 #include <bits/size_t.hpp>
 #include <bits/template_constants.hpp>
 #include <bits/template_logics.hpp>
+#include <bits/underlying_type.hpp>
 #include <bits/void_t.hpp>
 
 namespace std {
@@ -59,6 +60,8 @@ using std::impl::remove_cvref_t;
 using std::impl::remove_reference;
 using std::impl::remove_reference_t;
 using std::impl::true_type;
+using std::impl::underlying_type;
+using std::impl::underlying_type_t;
 using std::impl::void_t;
 
 }  // namespace std

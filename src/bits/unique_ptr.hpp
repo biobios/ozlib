@@ -41,7 +41,7 @@ class unique_ptr {
 
    private:
     pointer _ptr;
-    deleter_type _deleter;
+    [[no_unique_address]]deleter_type _deleter;
 
    public:
     constexpr unique_ptr() noexcept
@@ -173,7 +173,7 @@ class unique_ptr<T[], D> {
 
    private:
     pointer _ptr;
-    deleter_type _deleter;
+    [[no_unique_address]]deleter_type _deleter;
 
    public:
     constexpr unique_ptr() noexcept

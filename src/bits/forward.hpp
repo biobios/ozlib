@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bits/reference_traits.hpp>
+#include <bits/fundamental_traits.hpp>
 
 namespace std {
 namespace impl {

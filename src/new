@@ -1,8 +1,11 @@
 #pragma once
 
 #include <cstddef>
+#include <bits/launder.hpp>
 
 namespace std {
+using std::impl::launder;
+
 enum class align_val_t : std::size_t {};
 struct nothrow_t {};
 extern const nothrow_t nothrow;

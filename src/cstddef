@@ -1,10 +1,23 @@
 #pragma once
 
+#include <bits/byte.hpp>
 #include <bits/nullptr_t.hpp>
 #include <bits/ptrdiff_t.hpp>
 #include <bits/size_t.hpp>
 
 namespace std {
+using std::impl::byte;
+using std::impl::operator<<;
+using std::impl::operator<<=;
+using std::impl::operator>>;
+using std::impl::operator>>=;
+using std::impl::operator|;
+using std::impl::operator|=;
+using std::impl::operator&;
+using std::impl::operator&=;
+using std::impl::operator^;
+using std::impl::operator^=;
+using std::impl::operator~;
 using std::impl::nullptr_t;
 using std::impl::ptrdiff_t;
 using std::impl::size_t;

@@ -1,6 +1,11 @@
 #pragma once
 
+#include <bits/intptr_t.hpp>
+
 namespace std {
+using intptr_t = impl::intptr_t;
+using uintptr_t = impl::uintptr_t;
+
 using int8_t = signed char;
 using uint8_t = unsigned char;
 using int16_t = signed short;
