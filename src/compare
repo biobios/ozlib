@@ -1,0 +1,9 @@
+#pragma once
+
+#include <bits/comparison_categories.hpp>
+
+namespace std {
+    using std::impl::partial_ordering;
+    using std::impl::strong_ordering;
+    using std::impl::weak_ordering;
+}

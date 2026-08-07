@@ -1,0 +1,7 @@
+#pragma once
+
+#include <bits/monostate.hpp>
+
+namespace std {
+    using std::impl::monostate;
+}
