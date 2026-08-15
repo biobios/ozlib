@@ -1,11 +1,13 @@
 #pragma once
 
+#include <bits/constructible.hpp>
 #include <bits/convertible.hpp>
 #include <bits/derived_from.hpp>
 #include <bits/reference_traits.hpp>
 #include <bits/same.hpp>
 
 namespace std {
+using std::impl::constructible_from;
 using std::impl::convertible_to;
 using std::impl::derived_from;
 using std::impl::same_as;
