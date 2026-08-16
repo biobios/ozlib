@@ -123,7 +123,7 @@ class function<R(ArgTypes...)> {
         }
         void* target() override { return _target; }
         void clone_callable(func_or_val_ptr_wrapper* ptr) override {
-            ptr->set(_target);
+            ptr->set(&_target->get());
         }
         void destroy_callable() override {}
     };
@@ -332,6 +332,11 @@ class function<R(ArgTypes...)> {
                      alignof(reference_wrapper<F>) == alignof(void*))
         class callable_manager_impl<reference_wrapper<F>> {
            public:
+            static void init(func_or_val_ptr_wrapper* data,
+                             reference_wrapper<F>&& f) {
+                data->set(&f.get());
+            }
+
             static void init(func_or_val_ptr_wrapper* data,
                              reference_wrapper<F>& f) {
                 data->set(&f.get());
