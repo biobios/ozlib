@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bits/arithmetic_traits.hpp>
 #include <bits/array_traits.hpp>
 #include <bits/compound_traits.hpp>
 #include <bits/constructible.hpp>
@@ -41,6 +42,8 @@ using std::impl::is_convertible_v;
 using std::impl::is_default_constructible;
 using std::impl::is_function;
 using std::impl::is_function_v;
+using std::impl::is_integral;
+using std::impl::is_integral_v;
 using std::impl::is_lvalue_reference;
 using std::impl::is_lvalue_reference_v;
 using std::impl::is_object;
@@ -51,6 +54,10 @@ using std::impl::is_rvalue_reference;
 using std::impl::is_rvalue_reference_v;
 using std::impl::is_same;
 using std::impl::is_same_v;
+using std::impl::is_signed;
+using std::impl::is_signed_v;
+using std::impl::is_unsigned;
+using std::impl::is_unsigned_v;
 using std::impl::is_void;
 using std::impl::is_void_v;
 using std::impl::remove_cv;
