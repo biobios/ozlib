@@ -154,45 +154,46 @@ class function<R(ArgTypes...)> {
        public:
         virtual void visit(management_operand_base* operand) = 0;
 
-        class get_type_info : public management_operator {
-           public:
-            const type_info* info;
-            void visit(management_operand_base* operand) override {
-                info = operand->type();
+    };
+
+    class get_type_info : public management_operator {
+        public:
+        const type_info* info;
+        void visit(management_operand_base* operand) override {
+            info = operand->type();
+        }
+    };
+
+    template <typename T>
+    class get_target : public management_operator {
+        public:
+        T* target;
+        void visit(management_operand_base* operand) override {
+            if (*operand->type() != *std::helper_typeid::typeid_ptr<T>()) {
+                target = nullptr;
+                return;
             }
-        };
 
-        template <typename T>
-        class get_target : public management_operator {
-           public:
-            T* target;
-            void visit(management_operand_base* operand) override {
-                if (*operand->type() != *std::helper_typeid::typeid_ptr<T>()) {
-                    target = nullptr;
-                    return;
-                }
+            target = operand->target();
+        }
+    };
 
-                target = operand->target();
-            }
-        };
+    class clone_callable : public management_operator {
+        func_or_val_ptr_wrapper* _ptr_wrapper;
 
-        class clone_callable : public management_operator {
-            func_or_val_ptr_wrapper* _ptr_wrapper;
+        public:
+        clone_callable(func_or_val_ptr_wrapper* ptr_wrapper)
+            : _ptr_wrapper{ptr_wrapper} {}
+        void visit(management_operand_base* operand) override {
+            operand->clone_callable(_ptr_wrapper);
+        }
+    };
 
-           public:
-            clone_callable(func_or_val_ptr_wrapper* ptr_wrapper)
-                : _ptr_wrapper{ptr_wrapper} {}
-            void visit(management_operand_base* operand) override {
-                operand->clone_callable(_ptr_wrapper);
-            }
-        };
-
-        class destroy_callable : public management_operator {
-           public:
-            void visit(management_operand_base* operand) override {
-                operand->destroy_callable();
-            }
-        };
+    class destroy_callable : public management_operator {
+        public:
+        void visit(management_operand_base* operand) override {
+            operand->destroy_callable();
+        }
     };
 
     class callable_manager {
@@ -226,7 +227,7 @@ class function<R(ArgTypes...)> {
                 return;
             }
 
-            typename management_operator::clone_callable ope{&_data};
+            clone_callable ope{&_data};
             other.operation(&ope);
             _invoker = other._invoker;
             _manage_func = other._manage_func;
@@ -256,7 +257,7 @@ class function<R(ArgTypes...)> {
         callable_manager& operator=(const callable_manager& other) {
             this->reset();
 
-            typename management_operator::clone_callable ope{&_data};
+            clone_callable ope{&_data};
             other.operation(&ope);
             _invoker = other._invoker;
             _manage_func = other._manage_func;
@@ -265,7 +266,7 @@ class function<R(ArgTypes...)> {
 
         void reset() {
             if (_data.is_null()) return;
-            typename management_operator::destroy_callable ope;
+            destroy_callable ope;
             operation(&ope);
             _data.clear();
             _invoker = nullptr;
@@ -448,7 +449,7 @@ class function<R(ArgTypes...)> {
     const type_info& target_type() const noexcept {
         if (!this->_manager.has_callable()) return typeid(void);
 
-        typename management_operator::get_type_info ope;
+        get_type_info ope;
         this->_manager.operation(&ope);
         return *ope.info;
     }
@@ -457,7 +458,7 @@ class function<R(ArgTypes...)> {
     T* target() noexcept {
         if (!this->_manager.has_callable()) return nullptr;
 
-        typename management_operator::template get_target<T> ope;
+        get_target<T> ope;
         this->_manager.operation(&ope);
         return ope.target;
     }
@@ -465,7 +466,7 @@ class function<R(ArgTypes...)> {
     const T* target() const noexcept {
         if (!this->_manager.has_callable()) return nullptr;
 
-        typename management_operator::template get_target<T> ope;
+        get_target<T> ope;
         this->_manager.operation(&ope);
         return ope.target;
     }
