@@ -41,7 +41,7 @@ class unique_ptr {
 
    private:
     pointer _ptr;
-    deleter_type _deleter;
+    [[no_unique_address]]deleter_type _deleter;
 
    public:
     constexpr unique_ptr() noexcept
@@ -91,6 +91,7 @@ class unique_ptr {
     constexpr unique_ptr& operator=(unique_ptr&& u) noexcept {
         reset(u.release());
         _deleter = forward<D>(u.get_deleter());
+        return *this;
     }
 
     template <typename U, typename E>
@@ -100,9 +101,13 @@ class unique_ptr {
     constexpr unique_ptr& operator=(unique_ptr<U, E>&& u) noexcept {
         reset(u.release());
         _deleter = forward<E>(u.get_deleter());
+        return *this;
     }
 
-    constexpr unique_ptr& operator=(nullptr_t) noexcept { reset(); }
+    constexpr unique_ptr& operator=(nullptr_t) noexcept {
+        reset();
+        return *this;
+    }
 
     unique_ptr& operator=(const unique_ptr&) = delete;
 
@@ -135,6 +140,10 @@ class unique_ptr {
     }
 
     constexpr pointer get() const noexcept { return _ptr; }
+    
+    constexpr deleter_type& get_deleter() noexcept {
+        return _deleter;
+    }
 
     constexpr const deleter_type& get_deleter() const noexcept {
         return _deleter;
@@ -173,7 +182,7 @@ class unique_ptr<T[], D> {
 
    private:
     pointer _ptr;
-    deleter_type _deleter;
+    [[no_unique_address]]deleter_type _deleter;
 
    public:
     constexpr unique_ptr() noexcept

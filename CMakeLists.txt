@@ -9,12 +9,9 @@ add_library(ozstd STATIC
     ${OZSTD_SOURCES}
 )
 target_compile_options(ozstd PRIVATE
-    --target=x86_64-unknown-none-elf
     -O2
     -Wall
     -g
-    -ffreestanding
-    -mno-red-zone
     -fno-exceptions
     -fno-rtti
 )
@@ -28,12 +25,9 @@ add_library(commonstd STATIC
     ${COMMONSTD_SOURCES}
 )
 target_compile_options(commonstd PRIVATE
-    --target=x86_64-unknown-none-elf
     -O2
     -Wall
     -g
-    -ffreestanding
-    -mno-red-zone
     -fno-exceptions
     -fno-rtti
 )
