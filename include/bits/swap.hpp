@@ -35,7 +35,7 @@ struct swap_fn {
             { fn(a, b) };
         }
     constexpr void operator()(T (&a)[N], U (&b)[N]) const
-        noexcept((*this)(declval<T&>(), declval<U&>())) {
+        noexcept((*this)(OZLIB_NAMESPACE::impl::declval<T&>(), OZLIB_NAMESPACE::impl::declval<U&>())) {
         for (OZLIB_NAMESPACE::impl::size_t i = 0; i < N; ++i) {
             (*this)(a[i], b[i]);
         }

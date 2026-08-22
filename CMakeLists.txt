@@ -8,30 +8,20 @@ file(GLOB OZSTD_SOURCES CONFIGURE_DEPENDS "src/spec/*.cpp")
 add_library(ozstd STATIC
     ${OZSTD_SOURCES}
 )
-target_compile_options(ozstd PRIVATE
-    -O2
-    -Wall
-    -g
-    -fno-exceptions
-    -fno-rtti
-)
-target_include_directories(ozstd PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-)
+target_compile_options(ozstd PRIVATE -O2 -Wall -g -fno-exceptions -fno-rtti)
+target_include_directories(ozstd PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 file(GLOB COMMONSTD_SOURCES CONFIGURE_DEPENDS "src/common/*.cpp")
 add_library(commonstd STATIC
     ${COMMONSTD_SOURCES}
 )
-target_compile_options(commonstd PRIVATE
-    -O2
-    -Wall
-    -g
-    -fno-exceptions
-    -fno-rtti
-)
-target_include_directories(commonstd PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-)
+target_compile_options(commonstd PRIVATE -O2 -Wall -g -fno-exceptions -fno-rtti)
+target_include_directories(commonstd PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+enable_testing()
+add_subdirectory(../bios-ut build_bios_ut)
+
+file(GLOB TEST_SOURCES CONFIGURE_DEPENDS "test/test_*.cpp")
+add_executable(ozlib_test ${TEST_SOURCES})
+target_link_libraries(ozlib_test PRIVATE bios::ut_main commonstd)
+add_test(NAME ozlib_test COMMAND ozlib_test)

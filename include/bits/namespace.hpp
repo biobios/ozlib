@@ -1,5 +1,8 @@
 #pragma once
 
 #ifndef OZLIB_NAMESPACE
-#define OZLIB_NAMESPACE std
+namespace std {
+    inline namespace __ozlib {}
+}
+#define OZLIB_NAMESPACE std::__ozlib
 #endif
