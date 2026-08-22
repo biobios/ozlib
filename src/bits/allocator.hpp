@@ -1,10 +1,12 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/ptrdiff_t.hpp>
 #include <bits/template_constants.hpp>
 #include <new>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <typename T>
@@ -43,4 +45,4 @@ constexpr bool operator!=(const allocator<T>&, const allocator<U>&) noexcept {
 }
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

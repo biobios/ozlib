@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/array_traits.hpp>
 #include <bits/assignable.hpp>
 #include <bits/constructible.hpp>
@@ -14,7 +16,7 @@
 
 // todo: 共通のオーバーロード解決に参加しない条件を追加する
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 /// @brief
@@ -360,4 +362,4 @@ template <typename T, typename... Args>
 void make_unique(Args&&...) = delete;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

@@ -1,9 +1,11 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/cv_traits.hpp>
 #include <bits/void_t.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 #ifdef __GNUC__
@@ -30,4 +32,4 @@ template <typename Base, typename Derived>
 inline constexpr bool is_base_of_v = is_base_of<Base, Derived>::value;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

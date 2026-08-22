@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/compound_traits.hpp>
 #include <bits/declval.hpp>
 #include <bits/invoke.hpp>
@@ -7,7 +9,7 @@
 #include <bits/pointer_utils.hpp>
 #include <bits/template_logics.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <class T>
@@ -62,4 +64,4 @@ template <class T>
 void ref(const T&&) = delete;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

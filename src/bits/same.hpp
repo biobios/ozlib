@@ -1,8 +1,10 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/template_constants.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <class T, class U>
@@ -26,4 +28,4 @@ concept same_as =
 namespace helper_same_as {};
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

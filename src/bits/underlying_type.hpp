@@ -1,8 +1,10 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/fundamental_traits.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 template <typename T>
 struct underlying_type {};

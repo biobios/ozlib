@@ -1,12 +1,14 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/common_traits.hpp>
 #include <bits/declval.hpp>
 #include <bits/forward.hpp>
 #include <bits/reference_traits.hpp>
 #include <bits/same.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 template <typename T, typename D>
 struct is_assignable : false_type {};
@@ -63,8 +65,8 @@ concept assignable_from =
     common_reference_with<const remove_reference_t<LHS>&,
                           const remove_reference_t<RHS>&> &&
     requires(LHS lhs, RHS&& rhs) {
-        { lhs = std::impl::forward<RHS>(rhs) } -> same_as<LHS>;
+        { lhs = OZLIB_NAMESPACE::impl::forward<RHS>(rhs) } -> same_as<LHS>;
     };
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

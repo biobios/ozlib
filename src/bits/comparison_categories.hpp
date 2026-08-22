@@ -1,6 +1,8 @@
 #pragma once
 
-namespace std {
+#include <bits/namespace.hpp>
+
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 namespace exposition_only {
@@ -227,4 +229,4 @@ inline constexpr strong_ordering strong_ordering::equal =
 inline constexpr strong_ordering strong_ordering::equivalent =
     strong_ordering(exposition_only::ord::equivalent);
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

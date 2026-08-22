@@ -1,8 +1,10 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/convertible.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 namespace exposition_only {
 
@@ -26,4 +28,4 @@ concept dereferenceable = requires(T& t) {
 };
 }  // namespace exposition_only
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

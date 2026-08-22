@@ -1,13 +1,15 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/function.hpp>
 #include <bits/invoke.hpp>
 #include <bits/reference_wrapper.hpp>
 
-namespace std {
-using std::impl::function;
-using std::impl::invoke;
-using std::impl::ref;
-using std::impl::reference_wrapper;
+namespace OZLIB_NAMESPACE {
+using OZLIB_NAMESPACE::impl::function;
+using OZLIB_NAMESPACE::impl::invoke;
+using OZLIB_NAMESPACE::impl::ref;
+using OZLIB_NAMESPACE::impl::reference_wrapper;
 
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

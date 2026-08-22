@@ -1,15 +1,17 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/constructible.hpp>
 #include <bits/convertible.hpp>
 #include <bits/derived_from.hpp>
 #include <bits/reference_traits.hpp>
 #include <bits/same.hpp>
 
-namespace std {
-using std::impl::constructible_from;
-using std::impl::convertible_to;
-using std::impl::derived_from;
-using std::impl::same_as;
+namespace OZLIB_NAMESPACE {
+using OZLIB_NAMESPACE::impl::constructible_from;
+using OZLIB_NAMESPACE::impl::convertible_to;
+using OZLIB_NAMESPACE::impl::derived_from;
+using OZLIB_NAMESPACE::impl::same_as;
 
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

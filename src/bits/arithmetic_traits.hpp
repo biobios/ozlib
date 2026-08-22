@@ -1,9 +1,11 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/compound_traits.hpp>
 #include <bits/template_constants.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <typename>
@@ -34,4 +36,4 @@ template <typename T>
 concept unsigned_integral = integral<T> && is_unsigned_v<T>;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

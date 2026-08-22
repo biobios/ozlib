@@ -1,10 +1,12 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/declval.hpp>
 #include <bits/integer_sequence.hpp>
 #include <bits/size_t.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 namespace type_list_helper {
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/convertible.hpp>
 #include <bits/declval.hpp>
 #include <bits/destructible.hpp>
@@ -8,7 +10,7 @@
 #include <bits/size_t.hpp>
 #include <bits/template_constants.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <typename T, typename... Args>
@@ -103,4 +105,4 @@ concept default_initializable = constructible_from<T> && requires {
 };
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

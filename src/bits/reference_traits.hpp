@@ -1,9 +1,11 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/template_constants.hpp>
 #include <bits/type_identity.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <typename T>
@@ -53,4 +55,4 @@ template <typename T>
 using add_rvalue_reference_t = typename add_rvalue_reference<T>::type;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

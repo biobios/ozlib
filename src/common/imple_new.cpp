@@ -1,6 +1,7 @@
 #include <new>
+#include <bits/namespace.hpp>
 
-[[nodiscard]] void* operator new(std::size_t size, void* ptr) noexcept {
+[[nodiscard]] void* operator new(OZLIB_NAMESPACE::size_t size, void* ptr) noexcept {
     return ptr;
 }
 

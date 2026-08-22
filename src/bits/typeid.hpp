@@ -1,10 +1,12 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 // check if RTTI is enabled
 #include <bits/has_rtti.hpp>
 #include <typeinfo>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace helper_typeid {
 
 /**
@@ -24,4 +26,4 @@ const type_info* typeid_ptr() {
 }
 
 }  // namespace helper_typeid
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

@@ -1,5 +1,7 @@
 #pragma once
 
-namespace std {
+#include <bits/namespace.hpp>
+
+namespace OZLIB_NAMESPACE {
 [[noreturn]] void abort() noexcept;
 }

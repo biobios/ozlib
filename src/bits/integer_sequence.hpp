@@ -1,8 +1,10 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/size_t.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 template <typename T, T... I>
 struct integer_sequence {

@@ -1,10 +1,12 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/cv_traits.hpp>
 #include <bits/same.hpp>
 #include <bits/template_constants.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 namespace {
@@ -33,4 +35,4 @@ template <typename T>
 using remove_pointer_t = typename remove_pointer<T>::type;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

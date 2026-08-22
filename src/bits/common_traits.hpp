@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/comparison_categories.hpp>
 #include <bits/compound_traits.hpp>
 #include <bits/convertible.hpp>
@@ -9,7 +11,7 @@
 #include <bits/same.hpp>
 #include <bits/type_identity.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 namespace exposition_only {
@@ -281,4 +283,4 @@ concept common_reference_with =
     convertible_to<T, common_reference_t<T, U>> &&
     convertible_to<U, common_reference_t<T, U>>;
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

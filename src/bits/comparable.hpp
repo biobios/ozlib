@@ -1,10 +1,12 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/common_traits.hpp>
 #include <bits/exposition_only.hpp>
 #include <bits/reference_traits.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 namespace exposition_only {
 
@@ -60,4 +62,4 @@ concept totally_ordered_with =
                                        const remove_reference_t<U>&>> &&
     exposition_only::partialy_ordered_with<T, U>;
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

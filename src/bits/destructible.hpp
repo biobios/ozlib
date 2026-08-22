@@ -1,8 +1,10 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/template_constants.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 // traits
 template <typename T>
@@ -21,4 +23,4 @@ template <typename T>
 concept destructible = is_nothrow_destructible_v<T>;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

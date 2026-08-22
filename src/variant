@@ -1,7 +1,9 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/monostate.hpp>
 
-namespace std {
-    using std::impl::monostate;
+namespace OZLIB_NAMESPACE {
+    using OZLIB_NAMESPACE::impl::monostate;
 }

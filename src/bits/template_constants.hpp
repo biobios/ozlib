@@ -1,6 +1,8 @@
 #pragma once
 
-namespace std {
+#include <bits/namespace.hpp>
+
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <class T, T v>
@@ -21,4 +23,4 @@ using true_type = bool_constant<true>;
 using false_type = bool_constant<false>;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

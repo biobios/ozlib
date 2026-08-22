@@ -1,6 +1,8 @@
 #pragma once
 
-namespace std {
+#include <bits/namespace.hpp>
+
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <bool Condition, class T = void>
@@ -28,4 +30,4 @@ template <bool Condition, class T, class F>
 using conditional_t = typename conditional<Condition, T, F>::type;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

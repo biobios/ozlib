@@ -1,8 +1,10 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/reference_traits.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 template <class T>
 constexpr typename remove_reference<T>::type&& move(T&& t) noexcept {
@@ -10,4 +12,4 @@ constexpr typename remove_reference<T>::type&& move(T&& t) noexcept {
 }
 }  // namespace impl
 
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

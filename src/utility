@@ -1,17 +1,19 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/declval.hpp>
 #include <bits/forward.hpp>
 #include <bits/monostate.hpp>
 #include <bits/move.hpp>
 #include <bits/to_underlying.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 
-using std::impl::declval;
-using std::impl::forward;
-using std::impl::monostate;
-using std::impl::move;
-using std::impl::to_underlying;
+using OZLIB_NAMESPACE::impl::declval;
+using OZLIB_NAMESPACE::impl::forward;
+using OZLIB_NAMESPACE::impl::monostate;
+using OZLIB_NAMESPACE::impl::move;
+using OZLIB_NAMESPACE::impl::to_underlying;
 
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

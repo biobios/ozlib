@@ -1,6 +1,8 @@
 #pragma once
 
-namespace std {
+#include <bits/namespace.hpp>
+
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <class T>
@@ -13,4 +15,4 @@ template <class T>
 const T* addressof(const T&&) = delete;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

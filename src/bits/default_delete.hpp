@@ -1,9 +1,11 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/convertible.hpp>
 #include <bits/fundamental_traits.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 template <typename T>
 struct default_delete {
@@ -33,4 +35,4 @@ struct default_delete<T[]> {
     }
 };
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

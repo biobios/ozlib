@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/convertible.hpp>
 #include <bits/cvref_traits.hpp>
 #include <bits/decay.hpp>
@@ -11,7 +13,7 @@
 #include <bits/reference_wrapper.hpp>
 #include <bits/typeid.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 namespace helper_function {
@@ -93,7 +95,7 @@ class function<R(ArgTypes...)> {
         management_operand_for_dynamic_allocation(F* target)
             : _target{target} {}
         const type_info* type() override {
-            return std::helper_typeid::typeid_ptr<F>();
+            return OZLIB_NAMESPACE::helper_typeid::typeid_ptr<F>();
         }
         void* target() override { return _target; }
         void clone_callable(func_or_val_ptr_wrapper* ptr) override {
@@ -119,7 +121,7 @@ class function<R(ArgTypes...)> {
         management_operand_for_reference_wrapper(reference_wrapper<F>* target)
             : _target{target} {}
         const type_info* type() override {
-            return std::helper_typeid::typeid_ptr<reference_wrapper<F>>();
+            return OZLIB_NAMESPACE::helper_typeid::typeid_ptr<reference_wrapper<F>>();
         }
         void* target() override { return _target; }
         void clone_callable(func_or_val_ptr_wrapper* ptr) override {
@@ -141,7 +143,7 @@ class function<R(ArgTypes...)> {
        public:
         management_operand_for_function_pointer(F** target) : _target{target} {}
         const type_info* type() override {
-            return std::helper_typeid::typeid_ptr<F*>();
+            return OZLIB_NAMESPACE::helper_typeid::typeid_ptr<F*>();
         }
         void* target() override { return _target; }
         void clone_callable(func_or_val_ptr_wrapper* ptr) override {
@@ -169,7 +171,7 @@ class function<R(ArgTypes...)> {
         public:
         T* target;
         void visit(management_operand_base* operand) override {
-            if (*operand->type() != *std::helper_typeid::typeid_ptr<T>()) {
+            if (*operand->type() != *OZLIB_NAMESPACE::helper_typeid::typeid_ptr<T>()) {
                 target = nullptr;
                 return;
             }
@@ -276,9 +278,9 @@ class function<R(ArgTypes...)> {
         ~callable_manager() { reset(); }
 
         static void swap(callable_manager& lhs, callable_manager& rhs) {
-            callable_manager tmp{std::impl::move(lhs)};
-            lhs = std::impl::move(rhs);
-            rhs = std::impl::move(tmp);
+            callable_manager tmp{OZLIB_NAMESPACE::impl::move(lhs)};
+            lhs = OZLIB_NAMESPACE::impl::move(rhs);
+            rhs = OZLIB_NAMESPACE::impl::move(tmp);
         }
 
         R invoke(ArgTypes&&... args) const {
@@ -315,7 +317,7 @@ class function<R(ArgTypes...)> {
 
             static R invoke(func_or_val_ptr_wrapper const* data,
                             ArgTypes&&... args) {
-                return std::impl::invoke(*data->template get<FD>(),
+                return OZLIB_NAMESPACE::impl::invoke(*data->template get<FD>(),
                                          forward<ArgTypes>(args)...);
             }
 
@@ -345,7 +347,7 @@ class function<R(ArgTypes...)> {
 
             static R invoke(func_or_val_ptr_wrapper const* data,
                             ArgTypes&&... args) {
-                return std::impl::invoke(
+                return OZLIB_NAMESPACE::impl::invoke(
                     reference_wrapper<F>{*data->template get<F>()},
                     forward<ArgTypes>(args)...);
             }
@@ -369,7 +371,7 @@ class function<R(ArgTypes...)> {
 
             static R invoke(func_or_val_ptr_wrapper const* data,
                             ArgTypes&&... args) {
-                return std::impl::invoke(data->template get<F>(),
+                return OZLIB_NAMESPACE::impl::invoke(data->template get<F>(),
                                          forward<ArgTypes>(args)...);
             }
 
@@ -389,7 +391,7 @@ class function<R(ArgTypes...)> {
     function() noexcept : _manager{} {}
     function(nullptr_t) noexcept : _manager{} {}
     function(const function& f) : _manager{f._manager} {}
-    function(function&& f) noexcept : _manager{std::impl::move(f._manager)} {}
+    function(function&& f) noexcept : _manager{OZLIB_NAMESPACE::impl::move(f._manager)} {}
 
     /// @brief 関数ポインタ、関数オブジェクト、メンバポインタで初期化する
     /// @par テンプレートパラメータ制約
@@ -405,7 +407,7 @@ class function<R(ArgTypes...)> {
             !is_same_v<remove_cvref_t<F>, function> &&
             requires(decay_t<F> f, ArgTypes... args) {
                 {
-                    std::impl::invoke(f, forward<ArgTypes>(args)...)
+                    OZLIB_NAMESPACE::impl::invoke(f, forward<ArgTypes>(args)...)
                 } -> helper_function::convertible_to_return_type_implicitly<R>;
             })
     function(F&& f) : _manager{forward<F>(f)} {}
@@ -413,14 +415,14 @@ class function<R(ArgTypes...)> {
     function& operator=(function&& f) {
         if (this == &f) return *this;
 
-        this->_manager = std::impl::move(f._manager);
+        this->_manager = OZLIB_NAMESPACE::impl::move(f._manager);
         return *this;
     }
     function& operator=(nullptr_t) noexcept { this->_manager.reset(); }
     template <typename F>
         requires(requires(decay_t<F> f, ArgTypes... args) {
             {
-                std::impl::invoke(f, forward<ArgTypes>(args)...)
+                OZLIB_NAMESPACE::impl::invoke(f, forward<ArgTypes>(args)...)
             } -> helper_function::convertible_to_return_type_implicitly<R>;
         })
     function& operator=(F&& f) {
@@ -501,4 +503,4 @@ void swap(function<R(ArgTypes...)>& f1, function<R(ArgTypes...)>& f2) noexcept {
 };
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

@@ -1,29 +1,31 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/byte.hpp>
 #include <bits/nullptr_t.hpp>
 #include <bits/ptrdiff_t.hpp>
 #include <bits/size_t.hpp>
 
-namespace std {
-using std::impl::byte;
-using std::impl::operator<<;
-using std::impl::operator<<=;
-using std::impl::operator>>;
-using std::impl::operator>>=;
-using std::impl::operator|;
-using std::impl::operator|=;
-using std::impl::operator&;
-using std::impl::operator&=;
-using std::impl::operator^;
-using std::impl::operator^=;
-using std::impl::operator~;
-using std::impl::nullptr_t;
-using std::impl::ptrdiff_t;
-using std::impl::size_t;
+namespace OZLIB_NAMESPACE {
+using OZLIB_NAMESPACE::impl::byte;
+using OZLIB_NAMESPACE::impl::operator<<;
+using OZLIB_NAMESPACE::impl::operator<<=;
+using OZLIB_NAMESPACE::impl::operator>>;
+using OZLIB_NAMESPACE::impl::operator>>=;
+using OZLIB_NAMESPACE::impl::operator|;
+using OZLIB_NAMESPACE::impl::operator|=;
+using OZLIB_NAMESPACE::impl::operator&;
+using OZLIB_NAMESPACE::impl::operator&=;
+using OZLIB_NAMESPACE::impl::operator^;
+using OZLIB_NAMESPACE::impl::operator^=;
+using OZLIB_NAMESPACE::impl::operator~;
+using OZLIB_NAMESPACE::impl::nullptr_t;
+using OZLIB_NAMESPACE::impl::ptrdiff_t;
+using OZLIB_NAMESPACE::impl::size_t;
 
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE
 
 // NOLINTNEXTLINE(readability-identifier-naming)
 #define offsetof(s, m) \
-    ((std::size_t) & reinterpret_cast<const volatile char&>((((s*)0)->m)))
+    ((OZLIB_NAMESPACE::size_t) & reinterpret_cast<const volatile char&>((((s*)0)->m)))

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/cvref_traits.hpp>
 #include <bits/forward.hpp>
 #include <bits/fundamental_traits.hpp>
@@ -7,7 +9,7 @@
 #include <bits/invoke_traits.hpp>
 #include <bits/template_logics.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <typename T>
@@ -92,4 +94,4 @@ constexpr invoke_result_t<Callable, Args...> invoke(Callable&& f,
 }
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

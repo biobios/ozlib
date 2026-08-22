@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/cvref_traits.hpp>
 #include <bits/decay.hpp>
 #include <bits/declval.hpp>
@@ -7,7 +9,7 @@
 #include <bits/inheritance_traits.hpp>
 #include <bits/template_logics.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <typename T>
@@ -91,4 +93,4 @@ template <typename F, typename... Args>
 using invoke_result_t = typename invoke_result<F, Args...>::type;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

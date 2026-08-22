@@ -1,12 +1,14 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/array_traits.hpp>
 #include <bits/compound_traits.hpp>
 #include <bits/cv_traits.hpp>
 #include <bits/fundamental_traits.hpp>
 #include <bits/reference_traits.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <class T>
@@ -30,4 +32,4 @@ template <class T>
 using decay_t = typename decay<T>::type;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

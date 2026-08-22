@@ -1,9 +1,11 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/size_t.hpp>
 #include <bits/template_constants.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <typename T>
@@ -39,4 +41,4 @@ template <class T>
 using remove_all_extents_t = typename remove_all_extents<T>::type;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

@@ -1,11 +1,13 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/exception_helper.hpp>
 #include <bits/ptrdiff_t.hpp>
 #include <bits/size_t.hpp>
 #include <bits/swap.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 template <class T, impl::size_t N>
 struct array {
     // NOLINTNEXTLINE(readability-identifier-naming)
@@ -45,4 +47,4 @@ struct array {
         for (size_type i = 0; i < N; ++i) impl::swap(_data[i], other._data[i]);
     }
 };
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

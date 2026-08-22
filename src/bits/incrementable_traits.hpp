@@ -1,11 +1,13 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/compound_traits.hpp>
 #include <bits/declval.hpp>
 #include <bits/fundamental_traits.hpp>
 #include <bits/ptrdiff_t.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <typename>
@@ -38,4 +40,4 @@ struct incrementable_traits<T> {
 };
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

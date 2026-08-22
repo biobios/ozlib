@@ -1,9 +1,11 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/cv_traits.hpp>
 #include <bits/reference_traits.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 template <typename T>
 struct remove_cvref {
@@ -13,4 +15,4 @@ struct remove_cvref {
 template <typename T>
 using remove_cvref_t = typename remove_cvref<T>::type;
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

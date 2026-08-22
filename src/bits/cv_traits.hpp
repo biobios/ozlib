@@ -1,8 +1,10 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/template_constants.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <typename T>
@@ -47,4 +49,4 @@ template <typename T>
 inline constexpr bool is_volatile_v = is_volatile<T>::value;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

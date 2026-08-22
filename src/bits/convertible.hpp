@@ -1,8 +1,10 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/declval.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <typename From, typename To>
@@ -26,4 +28,4 @@ concept convertible_to = impl::is_convertible_v<From, To> &&
 
 }  // namespace impl
 
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE

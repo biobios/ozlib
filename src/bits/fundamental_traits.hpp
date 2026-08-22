@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bits/namespace.hpp>
+
 #include <bits/cv_traits.hpp>
 #include <bits/nullptr_t.hpp>
 #include <bits/same.hpp>
@@ -7,7 +9,7 @@
 #include <bits/template_constants.hpp>
 #include <bits/type_identity.hpp>
 
-namespace std {
+namespace OZLIB_NAMESPACE {
 namespace impl {
 
 template <typename T>
@@ -214,4 +216,4 @@ template <typename T>
 concept floating_point = is_floating_point_v<T>;
 
 }  // namespace impl
-}  // namespace std
+}  // namespace OZLIB_NAMESPACE
