@@ -5,5 +5,5 @@
 #include <bits/monostate.hpp>
 
 namespace OZLIB_NAMESPACE {
-    using OZLIB_NAMESPACE::impl::monostate;
+    using impl::monostate;
 }

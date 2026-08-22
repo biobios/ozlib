@@ -1,6 +1,5 @@
 .vscode/*
 !.vscode/settings.json
-/include/
 /lib/
 /temp/
 /compile_commands.json

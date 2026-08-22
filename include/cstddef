@@ -8,21 +8,21 @@
 #include <bits/size_t.hpp>
 
 namespace OZLIB_NAMESPACE {
-using OZLIB_NAMESPACE::impl::byte;
-using OZLIB_NAMESPACE::impl::operator<<;
-using OZLIB_NAMESPACE::impl::operator<<=;
-using OZLIB_NAMESPACE::impl::operator>>;
-using OZLIB_NAMESPACE::impl::operator>>=;
-using OZLIB_NAMESPACE::impl::operator|;
-using OZLIB_NAMESPACE::impl::operator|=;
-using OZLIB_NAMESPACE::impl::operator&;
-using OZLIB_NAMESPACE::impl::operator&=;
-using OZLIB_NAMESPACE::impl::operator^;
-using OZLIB_NAMESPACE::impl::operator^=;
-using OZLIB_NAMESPACE::impl::operator~;
-using OZLIB_NAMESPACE::impl::nullptr_t;
-using OZLIB_NAMESPACE::impl::ptrdiff_t;
-using OZLIB_NAMESPACE::impl::size_t;
+using impl::byte;
+using impl::operator<<;
+using impl::operator<<=;
+using impl::operator>>;
+using impl::operator>>=;
+using impl::operator|;
+using impl::operator|=;
+using impl::operator&;
+using impl::operator&=;
+using impl::operator^;
+using impl::operator^=;
+using impl::operator~;
+using impl::nullptr_t;
+using impl::ptrdiff_t;
+using impl::size_t;
 
 }  // namespace OZLIB_NAMESPACE
 

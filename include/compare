@@ -5,7 +5,7 @@
 #include <bits/comparison_categories.hpp>
 
 namespace OZLIB_NAMESPACE {
-    using OZLIB_NAMESPACE::impl::partial_ordering;
-    using OZLIB_NAMESPACE::impl::strong_ordering;
-    using OZLIB_NAMESPACE::impl::weak_ordering;
+    using impl::partial_ordering;
+    using impl::strong_ordering;
+    using impl::weak_ordering;
 }

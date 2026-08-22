@@ -9,9 +9,9 @@
 #include <bits/same.hpp>
 
 namespace OZLIB_NAMESPACE {
-using OZLIB_NAMESPACE::impl::constructible_from;
-using OZLIB_NAMESPACE::impl::convertible_to;
-using OZLIB_NAMESPACE::impl::derived_from;
-using OZLIB_NAMESPACE::impl::same_as;
+using impl::constructible_from;
+using impl::convertible_to;
+using impl::derived_from;
+using impl::same_as;
 
 }  // namespace OZLIB_NAMESPACE

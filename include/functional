@@ -7,9 +7,9 @@
 #include <bits/reference_wrapper.hpp>
 
 namespace OZLIB_NAMESPACE {
-using OZLIB_NAMESPACE::impl::function;
-using OZLIB_NAMESPACE::impl::invoke;
-using OZLIB_NAMESPACE::impl::ref;
-using OZLIB_NAMESPACE::impl::reference_wrapper;
+using impl::function;
+using impl::invoke;
+using impl::ref;
+using impl::reference_wrapper;
 
 }  // namespace OZLIB_NAMESPACE

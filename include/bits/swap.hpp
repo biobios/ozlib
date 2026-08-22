@@ -6,11 +6,12 @@
 #include <bits/constructible.hpp>
 #include <bits/fundamental_traits.hpp>
 #include <bits/move.hpp>
+#include <bits/reference_traits.hpp>
 #include <bits/size_t.hpp>
 
 namespace OZLIB_NAMESPACE {
-namespace ranges {
 namespace impl {
+namespace ranges {
 namespace swap_fn {
 
 template <typename T>
@@ -18,10 +19,10 @@ void swap(T&, T&) = delete;
 
 struct swap_fn {
     template <typename T, typename U>
-        requires(OZLIB_NAMESPACE::impl::is_class_v<OZLIB_NAMESPACE::impl::remove_reference_t<T>> ||
-                 OZLIB_NAMESPACE::impl::is_enum_v<OZLIB_NAMESPACE::impl::remove_reference_t<T>> ||
-                 OZLIB_NAMESPACE::impl::is_class_v<OZLIB_NAMESPACE::impl::remove_reference_t<U>> ||
-                 OZLIB_NAMESPACE::impl::is_enum_v<OZLIB_NAMESPACE::impl::remove_reference_t<U>>) &&
+        requires(is_class_v<remove_reference_t<T>> ||
+                 is_enum_v<remove_reference_t<T>> ||
+                 is_class_v<remove_reference_t<U>> ||
+                 is_enum_v<remove_reference_t<U>>) &&
                 requires(T&& t, U&& u) {
                     void(swap(static_cast<T&&>(t), static_cast<U&&>(u)));
                 }
@@ -63,10 +64,8 @@ inline namespace cpo_swap {
 inline constexpr swap_fn::swap_fn swap{};
 }
 
-}  // namespace impl
 }  // namespace ranges
 
-namespace impl {
 
 template <typename T>
 constexpr void swap(T& a, T& b) noexcept(is_nothrow_move_constructible_v<T> &&
@@ -84,14 +83,14 @@ constexpr void swap(T (&a)[N], T (&b)[N]) noexcept(noexcept(swap(*a, *b))) {
 }
 
 template <typename T>
-concept swappable = requires(T& a, T& b) { ranges::impl::swap(a, b); };
+concept swappable = requires(T& a, T& b) { ranges::swap(a, b); };
 
 template <typename T, typename U>
 concept swappable_with = common_reference_with<T, U> && requires(T&& t, U&& u) {
-    ranges::impl::swap(OZLIB_NAMESPACE::impl::forward<T>(t), OZLIB_NAMESPACE::impl::forward<T>(t));
-    ranges::impl::swap(OZLIB_NAMESPACE::impl::forward<U>(u), OZLIB_NAMESPACE::impl::forward<U>(u));
-    ranges::impl::swap(OZLIB_NAMESPACE::impl::forward<T>(t), OZLIB_NAMESPACE::impl::forward<U>(u));
-    ranges::impl::swap(OZLIB_NAMESPACE::impl::forward<U>(u), OZLIB_NAMESPACE::impl::forward<T>(t));
+    ranges::swap(impl::forward<T>(t), impl::forward<T>(t));
+    ranges::swap(impl::forward<U>(u), impl::forward<U>(u));
+    ranges::swap(impl::forward<T>(t), impl::forward<U>(u));
+    ranges::swap(impl::forward<U>(u), impl::forward<T>(t));
 };
 
 }  // namespace impl

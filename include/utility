@@ -10,10 +10,10 @@
 
 namespace OZLIB_NAMESPACE {
 
-using OZLIB_NAMESPACE::impl::declval;
-using OZLIB_NAMESPACE::impl::forward;
-using OZLIB_NAMESPACE::impl::monostate;
-using OZLIB_NAMESPACE::impl::move;
-using OZLIB_NAMESPACE::impl::to_underlying;
+using impl::declval;
+using impl::forward;
+using impl::monostate;
+using impl::move;
+using impl::to_underlying;
 
 }  // namespace OZLIB_NAMESPACE

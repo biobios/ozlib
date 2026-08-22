@@ -2,6 +2,9 @@
 
 #include <bits/namespace.hpp>
 
+// #include <initializer_list>
+#include <compare>
+
 #include <bits/exception_helper.hpp>
 #include <bits/ptrdiff_t.hpp>
 #include <bits/size_t.hpp>
@@ -14,6 +17,8 @@ struct array {
     T _data[N];
     using reference = T&;
     using const_reference = const T&;
+    using iterator = T*;
+    using const_iterator = const T*;
     using size_type = impl::size_t;
     using difference_type = impl::ptrdiff_t;
     using pointer = T*;
@@ -46,5 +51,10 @@ struct array {
         noexcept(impl::swap(impl::declval<T&>(), impl::declval<T&>()))) {
         for (size_type i = 0; i < N; ++i) impl::swap(_data[i], other._data[i]);
     }
+
+    constexpr iterator begin() noexcept { return &_data[0]; }
+    constexpr const_iterator begin() const noexcept { return &_data[0]; }
+    constexpr iterator end() noexcept { return &_data[N]; }
+    constexpr const_iterator end() const noexcept { return &_data[N]; }
 };
 }  // namespace OZLIB_NAMESPACE

@@ -8,8 +8,8 @@
 
 namespace OZLIB_NAMESPACE {
 
-using OZLIB_NAMESPACE::impl::addressof;
-using OZLIB_NAMESPACE::impl::default_delete;
-using OZLIB_NAMESPACE::impl::unique_ptr;
+using impl::addressof;
+using impl::default_delete;
+using impl::unique_ptr;
 
 }  // namespace OZLIB_NAMESPACE
