@@ -5,7 +5,9 @@
 #include <bits/comparison_categories.hpp>
 
 namespace OZLIB_NAMESPACE {
+// NOLINTBEGIN(misc-unused-using-decls)
     using impl::partial_ordering;
     using impl::strong_ordering;
     using impl::weak_ordering;
+// NOLINTEND(misc-unused-using-decls)
 }

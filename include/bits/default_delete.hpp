@@ -15,7 +15,7 @@ struct default_delete {
     default_delete(const default_delete<From>&) noexcept {}
     void operator()(T* ptr) const {
         static_assert(!is_void_v<T>, "can't delete pointer to incomplete type");
-        static_assert(sizeof(T) > 0, "can't delete pointer to incomplete type");
+        static_assert(static_cast<bool>(sizeof(T)), "can't delete pointer to incomplete type");
         delete ptr;
     }
 };
@@ -30,7 +30,7 @@ struct default_delete<T[]> {
     template <typename From>
         requires is_convertible_v<From (*)[], T (*)[]>
     void operator()(From* ptr) const {
-        static_assert(sizeof(T) > 0, "can't delete pointer to incomplete type");
+        static_assert(static_cast<bool>(sizeof(T)), "can't delete pointer to incomplete type");
         delete[] ptr;
     }
 };

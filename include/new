@@ -6,7 +6,9 @@
 #include <bits/launder.hpp>
 
 namespace OZLIB_NAMESPACE {
+// NOLINTBEGIN(misc-unused-using-decls)
 using impl::launder;
+// NOLINTEND(misc-unused-using-decls)
 
 enum class align_val_t : impl::size_t {};
 struct nothrow_t {};

@@ -7,6 +7,7 @@
 #include <bits/convertible.hpp>
 #include <bits/cvref_traits.hpp>
 #include <bits/decay.hpp>
+#include <bits/exposition_only.hpp>
 #include <bits/fundamental_traits.hpp>
 #include <bits/same.hpp>
 #include <bits/type_identity.hpp>
@@ -17,29 +18,6 @@ namespace impl {
 namespace exposition_only {
 template <typename X, typename Y>
 using cond_res = decltype(false ? declval<X (&)()>()() : declval<Y (&)()>()());
-
-template <typename FROM, typename TO>
-struct copycv_helper {
-    using type = TO;
-};
-
-template <typename FROM, typename TO>
-struct copycv_helper<FROM const, TO> {
-    using type = TO const;
-};
-
-template <typename FROM, typename TO>
-struct copycv_helper<FROM volatile, TO> {
-    using type = TO volatile;
-};
-
-template <typename FROM, typename TO>
-struct copycv_helper<FROM const volatile, TO> {
-    using type = TO const volatile;
-};
-
-template <typename FROM, typename TO>
-using copycv = typename copycv_helper<FROM, TO>::type;
 
 template <typename A, typename B, typename X = remove_reference_t<A>,
           typename Y = remove_reference_t<B>>

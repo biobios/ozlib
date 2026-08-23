@@ -9,11 +9,12 @@
 #include <bits/to_underlying.hpp>
 
 namespace OZLIB_NAMESPACE {
-
+// NOLINTBEGIN(misc-unused-using-decls)
 using impl::declval;
 using impl::forward;
 using impl::monostate;
 using impl::move;
 using impl::to_underlying;
+// NOLINTEND(misc-unused-using-decls)
 
 }  // namespace OZLIB_NAMESPACE

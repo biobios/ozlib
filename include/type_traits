@@ -23,6 +23,7 @@
 #include <bits/void_t.hpp>
 
 namespace OZLIB_NAMESPACE {
+// NOLINTBEGIN(misc-unused-using-decls)
 using impl::bool_constant;
 using impl::decay;
 using impl::decay_t;
@@ -72,5 +73,6 @@ using impl::true_type;
 using impl::underlying_type;
 using impl::underlying_type_t;
 using impl::void_t;
+// NOLINTEND(misc-unused-using-decls)
 
 }  // namespace OZLIB_NAMESPACE

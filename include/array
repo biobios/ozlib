@@ -3,7 +3,7 @@
 #include <bits/namespace.hpp>
 
 // #include <initializer_list>
-#include <compare>
+#include <compare> // IWYU pragma: export
 
 #include <bits/exception_helper.hpp>
 #include <bits/ptrdiff_t.hpp>

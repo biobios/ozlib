@@ -26,6 +26,31 @@ template <typename T>
 concept dereferenceable = requires(T& t) {
     { *t } -> can_reference;
 };
+
+namespace detail {
+template <typename FROM, typename TO>
+struct copycv_helper {
+    using type = TO;
+};
+
+template <typename FROM, typename TO>
+struct copycv_helper<FROM const, TO> {
+    using type = TO const;
+};
+
+template <typename FROM, typename TO>
+struct copycv_helper<FROM volatile, TO> {
+    using type = TO volatile;
+};
+
+template <typename FROM, typename TO>
+struct copycv_helper<FROM const volatile, TO> {
+    using type = TO const volatile;
+};
+} // namespace detail
+
+template <typename FROM, typename TO>
+using copycv = typename detail::copycv_helper<FROM, TO>::type;
 }  // namespace exposition_only
 }  // namespace impl
 }  // namespace OZLIB_NAMESPACE

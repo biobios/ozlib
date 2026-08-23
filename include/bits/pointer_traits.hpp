@@ -9,8 +9,7 @@
 namespace OZLIB_NAMESPACE {
 namespace impl {
 
-namespace {
-namespace helper_remove_pointer {
+namespace detail {
 template <typename T, typename>
 struct remove_pointer_helper {
     using type = T;
@@ -20,16 +19,13 @@ template <typename T, typename U>
 struct remove_pointer_helper<T, U*> {
     using type = U;
 };
-}  // namespace helper_remove_pointer
-}  // namespace
+}  // namespace detail
 
 template <typename T>
 struct remove_pointer {
-    using type = typename helper_remove_pointer::remove_pointer_helper<
+    using type = typename detail::remove_pointer_helper<
         T, remove_cv_t<T>>::type;
 };
-
-namespace helper_remove_pointer {}
 
 template <typename T>
 using remove_pointer_t = typename remove_pointer<T>::type;

@@ -6,6 +6,7 @@
 #include <bits/declval.hpp>
 #include <bits/fundamental_traits.hpp>
 #include <bits/ptrdiff_t.hpp>
+#include <bits/signed_traits.hpp>
 
 namespace OZLIB_NAMESPACE {
 namespace impl {

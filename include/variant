@@ -5,5 +5,7 @@
 #include <bits/monostate.hpp>
 
 namespace OZLIB_NAMESPACE {
-    using impl::monostate;
+// NOLINTBEGIN(misc-unused-using-decls)
+using impl::monostate;
+// NOLINTEND(misc-unused-using-decls)
 }

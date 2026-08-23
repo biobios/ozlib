@@ -7,9 +7,11 @@
 #include <bits/reference_wrapper.hpp>
 
 namespace OZLIB_NAMESPACE {
+// NOLINTBEGIN(misc-unused-using-decls)
 using impl::function;
 using impl::invoke;
 using impl::ref;
 using impl::reference_wrapper;
+// NOLINTEND(misc-unused-using-decls)
 
 }  // namespace OZLIB_NAMESPACE
