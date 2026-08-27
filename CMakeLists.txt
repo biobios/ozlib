@@ -20,7 +20,14 @@ target_compile_options(commonstd PRIVATE -O2 -Wall -g -fno-exceptions -fno-rtti)
 target_include_directories(commonstd PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 enable_testing()
-add_subdirectory(../bios-ut build_bios_ut)
+
+include(FetchContent)
+FetchContent_Declare(
+    bios_ut
+    GIT_REPOSITORY https://github.com/biobios/bios-ut.git
+    GIT_TAG        main
+)
+FetchContent_MakeAvailable(bios_ut)
 
 file(GLOB TEST_SOURCES CONFIGURE_DEPENDS "test/test_*.cpp")
 add_executable(ozlib_test ${TEST_SOURCES})
