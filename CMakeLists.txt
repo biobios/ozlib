@@ -19,17 +19,19 @@ add_library(commonstd STATIC
 target_compile_options(commonstd PRIVATE -O2 -Wall -g -fno-exceptions -fno-rtti)
 target_include_directories(commonstd PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
-enable_testing()
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    enable_testing()
 
-include(FetchContent)
-FetchContent_Declare(
-    bios_ut
-    GIT_REPOSITORY https://github.com/biobios/bios-ut.git
-    GIT_TAG        main
-)
-FetchContent_MakeAvailable(bios_ut)
+    include(FetchContent)
+    FetchContent_Declare(
+        bios_ut
+        GIT_REPOSITORY https://github.com/biobios/bios-ut.git
+        GIT_TAG        main
+    )
+    FetchContent_MakeAvailable(bios_ut)
 
-file(GLOB TEST_SOURCES CONFIGURE_DEPENDS "test/test_*.cpp")
-add_executable(ozlib_test ${TEST_SOURCES})
-target_link_libraries(ozlib_test PRIVATE bios::ut_main commonstd)
-add_test(NAME ozlib_test COMMAND ozlib_test)
+    file(GLOB TEST_SOURCES CONFIGURE_DEPENDS "test/test_*.cpp")
+    add_executable(ozlib_test ${TEST_SOURCES})
+    target_link_libraries(ozlib_test PRIVATE bios::ut_main commonstd)
+    add_test(NAME ozlib_test COMMAND ozlib_test)
+endif()
