@@ -6,14 +6,14 @@ namespace OZLIB_NAMESPACE {
 namespace impl {
 
 namespace exposition_only {
-enum class ord {
+enum class ord : signed char {
     equal = 0,
     equivalent = equal,
     less = -1,
     greater = 1,
 };
 
-enum class ncmp {
+enum class ncmp : signed char {
     unordered = -127,
 };
 }  // namespace exposition_only
@@ -29,13 +29,13 @@ struct unspecified {
 class partial_ordering {
     using unspecified = helper_comparison_categories::unspecified;
 
-    int _value;
+    signed char _value;
     bool _is_ordered;
 
     constexpr explicit partial_ordering(exposition_only::ord v) noexcept
-        : _value(static_cast<int>(v)), _is_ordered(true) {}
+        : _value(static_cast<signed char>(v)), _is_ordered(true) {}
     constexpr explicit partial_ordering(exposition_only::ncmp v) noexcept
-        : _value(static_cast<int>(v)), _is_ordered(false) {}
+        : _value(static_cast<signed char>(v)), _is_ordered(false) {}
 
    public:
     static const partial_ordering less;
@@ -96,9 +96,9 @@ inline constexpr partial_ordering partial_ordering::unordered =
 class weak_ordering {
     using unspecified = helper_comparison_categories::unspecified;
 
-    int _value;
+    signed char _value;
     constexpr explicit weak_ordering(exposition_only::ord v) noexcept
-        : _value(static_cast<int>(v)) {}
+        : _value(static_cast<signed char>(v)) {}
 
    public:
     static const weak_ordering less;
@@ -160,9 +160,9 @@ inline constexpr weak_ordering weak_ordering::greater =
 class strong_ordering {
     using unspecified = helper_comparison_categories::unspecified;
 
-    int _value;
+    signed char _value;
     constexpr explicit strong_ordering(exposition_only::ord v) noexcept
-        : _value(static_cast<int>(v)) {}
+        : _value(static_cast<signed char>(v)) {}
 
    public:
     static const strong_ordering less;
