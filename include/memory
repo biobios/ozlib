@@ -10,6 +10,7 @@ namespace OZLIB_NAMESPACE {
 // NOLINTBEGIN(misc-unused-using-decls)
 using impl::addressof;
 using impl::default_delete;
+using impl::make_unique;
 using impl::unique_ptr;
 // NOLINTEND(misc-unused-using-decls)
 
