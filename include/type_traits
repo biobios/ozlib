@@ -71,6 +71,8 @@ using impl::remove_cv;
 using impl::remove_cv_t;
 using impl::remove_cvref;
 using impl::remove_cvref_t;
+using impl::remove_extent;
+using impl::remove_extent_t;
 using impl::remove_reference;
 using impl::remove_reference_t;
 using impl::true_type;
