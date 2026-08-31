@@ -1,0 +1,9 @@
+#pragma once
+
+#include <bits/namespace>
+
+#include <bits/vector.hpp>
+
+namespace OZLIB_NAMESPACE {
+    using impl::vector;
+}
