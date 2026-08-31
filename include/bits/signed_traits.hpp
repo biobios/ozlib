@@ -103,5 +103,8 @@ template <typename T>
     requires is_enum_v<T>
 struct make_unsigned<T> : make_unsigned<underlying_type_t<T>> {};
 
+template <typename T>
+using make_unsigned_t = typename make_unsigned<T>::type;
+
 }
 }
