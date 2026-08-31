@@ -3,6 +3,7 @@
 #include <bits/namespace.hpp>
 
 #include <bits/construct_at.hpp>
+#include <bits/destroy.hpp>
 #include <bits/pointer_traits.hpp>
 #include <bits/signed_traits.hpp>
 
