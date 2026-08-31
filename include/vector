@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bits/namespace>
+#include <bits/namespace.hpp>
 
 #include <bits/vector.hpp>
 
