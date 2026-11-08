@@ -2,7 +2,8 @@
 
 #include <bits/namespace.hpp>
 
-#include <bits/comparison_categories.hpp>
+#include <compare>
+
 #include <bits/compound_traits.hpp>
 #include <bits/convertible.hpp>
 #include <bits/cvref_traits.hpp>

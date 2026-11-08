@@ -2,7 +2,7 @@
 
 #include <bits/namespace.hpp>
 
-#include <bits/comparison_categories.hpp>
+#include <compare>
 
 namespace OZLIB_NAMESPACE {
 namespace impl {
