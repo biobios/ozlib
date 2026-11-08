@@ -93,5 +93,13 @@ constexpr invoke_result_t<Callable, Args...> invoke(Callable&& f,
                                                              args)...);
 }
 
+template <typename F, typename... Args>
+concept invocable = requires(F&& f, Args&&... args) {
+    invoke(forward<F>(f), forward<Args>(args)...);
+};
+
+template <typename F, typename... Args>
+concept regular_invocable = invocable<F, Args...>;
+
 }  // namespace impl
 }  // namespace OZLIB_NAMESPACE

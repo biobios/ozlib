@@ -1,0 +1,17 @@
+#pragma once
+
+#include <bits/namespace.hpp>
+
+#include <compare> // IWYU pragma: export
+
+#include <bits/optional.hpp>
+
+namespace OZLIB_NAMESPACE {
+// NOLINTBEGIN(misc-unused-using-decls)
+using impl::bad_optional_access;
+using impl::make_optional;
+using impl::nullopt;
+using impl::nullopt_t;
+using impl::optional;
+// NOLINTEND(misc-unused-using-decls)
+}
