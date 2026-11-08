@@ -94,4 +94,9 @@ concept swappable_with = common_reference_with<T, U> && requires(T&& t, U&& u) {
 };
 
 }  // namespace impl
+
+// NOLINTBEGIN(misc-unused-using-decls)
+using impl::swap;
+// NOLINTEND(misc-unused-using-decls)
+
 }  // namespace OZLIB_NAMESPACE

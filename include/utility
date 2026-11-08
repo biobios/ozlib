@@ -4,16 +4,21 @@
 
 #include <bits/declval.hpp>
 #include <bits/forward.hpp>
+#include <bits/in_place_t.hpp>
 #include <bits/monostate.hpp>
 #include <bits/move.hpp>
+#include <bits/swap.hpp>
 #include <bits/to_underlying.hpp>
 
 namespace OZLIB_NAMESPACE {
 // NOLINTBEGIN(misc-unused-using-decls)
 using impl::declval;
 using impl::forward;
+using impl::in_place;
+using impl::in_place_t;
 using impl::monostate;
 using impl::move;
+using impl::swap;
 using impl::to_underlying;
 // NOLINTEND(misc-unused-using-decls)
 

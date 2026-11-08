@@ -7,6 +7,7 @@
 #include <iterator>
 #include <memory>
 #include <new>
+#include <optional>
 #include <stdexcept>
 #include <type_traits>
 #include <typeinfo>

@@ -2,6 +2,8 @@
 
 #include <bits/namespace.hpp>
 
+#include <new> // IWYU pragma: export
+
 #include <bits/assignable.hpp>
 #include <bits/byte.hpp>
 #include <bits/compound_traits.hpp>
@@ -14,6 +16,7 @@
 #include <bits/invoke_traits.hpp>
 #include <bits/move.hpp>
 #include <bits/same.hpp>
+#include <bits/swap.hpp>
 #include <bits/swappable.hpp>
 #include <bits/template_specialization_helper.hpp>
 #include <bits/temporary_traits.hpp>
