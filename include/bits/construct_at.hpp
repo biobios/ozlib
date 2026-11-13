@@ -3,6 +3,7 @@
 #include <bits/namespace.hpp>
 
 #include <bits/compound_traits.hpp>
+#include <bits/forward.hpp>
 #include <bits/launder.hpp>
 
 namespace OZLIB_NAMESPACE {

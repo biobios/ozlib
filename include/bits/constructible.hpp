@@ -104,5 +104,15 @@ concept default_initializable = constructible_from<T> && requires {
     (void)::new T;
 };
 
+namespace detail {
+template <typename T>
+concept implicitly_default_constructible =
+    default_initializable<T> && requires { [](const T&) {}({}); };
+
+template <typename T>
+concept explicitly_default_constructible =
+    is_default_constructible_v<T> && !implicitly_default_constructible<T>;
+}  // namespace detail
+
 }  // namespace impl
 }  // namespace OZLIB_NAMESPACE

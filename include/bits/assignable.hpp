@@ -14,7 +14,7 @@ template <typename T, typename D>
 struct is_assignable : false_type {};
 
 template <typename T, typename D>
-    requires requires { declval<T>() = declval<T>(); }
+    requires requires { declval<T>() = declval<D>(); }
 struct is_assignable<T, D> : true_type {};
 
 template <typename T, typename D>

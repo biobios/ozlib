@@ -63,5 +63,15 @@ constexpr reference_wrapper<T> ref(reference_wrapper<T> t) noexcept {
 template <class T>
 void ref(const T&&) = delete;
 
+template <class T>
+struct unwrap_reference {
+    using type = T;
+};
+
+template <class T>
+struct unwrap_reference<reference_wrapper<T>> {
+    using type = T&;
+};
+
 }  // namespace impl
 }  // namespace OZLIB_NAMESPACE

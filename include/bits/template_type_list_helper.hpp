@@ -8,10 +8,23 @@
 
 namespace OZLIB_NAMESPACE {
 namespace impl {
-namespace type_list_helper {
+namespace detail {
+
+template <typename T, size_t N>
+class get_type_at_index;
 
 template <typename... Types>
-struct type_list {};
+struct type_list {
+    template <template <typename...> typename Template>
+    using apply = Template<Types...>;
+    
+    template <size_t N>
+    using get_type_at_index = typename detail::get_type_at_index<type_list, N>::type;
+    
+    static constexpr size_t size() noexcept {
+        return sizeof...(Types);
+    }
+};
 
 template <typename Left, typename Right>
 struct type_list_cat;
@@ -24,18 +37,32 @@ struct type_list_cat<type_list<Left...>, type_list<Right...>> {
 template <typename Left, typename Right>
 using type_list_cat_t = typename type_list_cat<Left, Right>::type;
 
+template <typename... Lists>
+struct type_list_cat_multiple;
+
+template <typename List>
+struct type_list_cat_multiple<List> {
+    using type = List;
+};
+
+template <typename List1, typename List2, typename... Rest>
+struct type_list_cat_multiple<List1, List2, Rest...> {
+    using type = type_list_cat_t<List1, typename type_list_cat_multiple<List2, Rest...>::type>;
+};
+
+template <typename... Lists>
+using type_list_cat_multiple_t = typename type_list_cat_multiple<Lists...>::type;
+
 template <typename = void>
 struct dummy {
     template <typename U>
     dummy(U&&);
 };
 
-template <typename T, size_t N>
-class get_type_at_index;
-
 template <typename... Types, size_t N>
 class get_type_at_index<type_list<Types...>, N> {
 #if defined(__GNUC__) || !defined(__clang__)
+public:
     using type = __type_pack_element<N, Types...>;
 #else
     using indices = make_index_sequence<N>;
@@ -54,6 +81,25 @@ public:
     using type = typename get_type_at_index_impl<indices>::type;
 #endif
 };
+
+template <typename T, size_t N>
+using get_type_at_index_t = typename get_type_at_index<T, N>::type;
+
+/**
+ * @brief index_sequenceを受け取って、型リストから指定されたインデックスの型リストを取得する
+ * @tparam T 型リスト
+ * @tparam U index_sequence
+ */
+template <typename T, typename U>
+struct get_type_list_at_indices;
+
+template <typename... Types, size_t... I>
+struct get_type_list_at_indices<type_list<Types...>, index_sequence<I...>> {
+    using type = type_list<get_type_at_index_t<type_list<Types...>, I>...>;
+};
+
+template <typename T, typename U>
+using get_type_list_at_indices_t = typename get_type_list_at_indices<T, U>::type;
 
 }
 }
