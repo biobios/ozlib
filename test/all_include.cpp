@@ -9,6 +9,7 @@
 #include <new>
 #include <optional>
 #include <stdexcept>
+#include <tuple>
 #include <type_traits>
 #include <typeinfo>
 #include <utility>

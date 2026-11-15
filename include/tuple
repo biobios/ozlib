@@ -6,6 +6,8 @@
 
 namespace OZLIB_NAMESPACE {
 
+using impl::allocator_arg_t;
+using impl::allocator_arg;
 using impl::ignore;
 using impl::tuple;
 using impl::make_tuple;

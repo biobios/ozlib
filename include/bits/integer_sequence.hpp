@@ -54,12 +54,12 @@ using make_index_sequence = make_integer_sequence<size_t, N>;
 template <typename... Types>
 using index_sequence_for = make_index_sequence<sizeof...(Types)>;
 
-template <size_t I, typename T, T... Values>
-constexpr T get(integer_sequence<T, Values...>) noexcept {
+}
+
+template <impl::size_t I, typename T, T... Values>
+constexpr T get(impl::integer_sequence<T, Values...>) noexcept {
     static_assert(I < sizeof...(Values), "index out of bounds");
     constexpr T values[] = {Values...};
     return values[I];
-}
-
 }
 }

@@ -64,6 +64,12 @@ class tuple {
     public:
         using type = args_type_list::template get_type_at_index<I>;
         type value;
+        constexpr element() requires(is_default_constructible_v<type>) : value() {}
+        constexpr element(const element&) requires(is_copy_constructible_v<type>) = default;
+        constexpr element(element&&) requires(is_move_constructible_v<type>) = default;
+        template <typename U>
+            requires(is_constructible_v<type, U>)
+        constexpr element(U&& u) : value(forward<U>(u)) {}
         constexpr element& operator=(const element& other) requires(!is_reference_v<type>) = default;
         constexpr const element& operator=(const element& other) const requires(is_reference_v<type>) {
             value = other.value;
@@ -94,12 +100,26 @@ class tuple {
             value = move(other);
             return *this;
         }
+        constexpr void swap(element& rhs) noexcept(is_nothrow_swappable_v<type>) {
+            using OZLIB_NAMESPACE::swap;
+            swap(value, rhs.value);
+        }
+        constexpr void swap(const element& rhs) const noexcept(is_nothrow_swappable_v<const type>) {
+            using OZLIB_NAMESPACE::swap;
+            swap(value, rhs.value);
+        }
     };
     struct construct_tuple_like_tag {};
     template <impl::size_t... Is>
     class tuple_impl : public element<Is>... {
     public:
-        constexpr tuple_impl(Args&... args) : element<Is>{args}... {}
+        constexpr tuple_impl() = default;
+        constexpr tuple_impl(const tuple_impl&) = default;
+        constexpr tuple_impl(tuple_impl&&) = default;
+        constexpr tuple_impl(const Args&... args) requires(sizeof...(Args) != 0) : element<Is>{args}... {}
+        template <typename... UArgs>
+            requires(sizeof...(Args) != 0)
+        constexpr tuple_impl(UArgs&&... args) : element<Is>{forward<UArgs>(args)}... {}
         template <typename... UArgs>
         constexpr tuple_impl(tuple<UArgs...>& other) : element<Is>{get<Is>(static_cast<decltype(other)>(other))}... {}
         template <typename... UArgs>
@@ -183,10 +203,10 @@ class tuple {
             return *this;
         }
         constexpr void swap(tuple_impl& rhs) noexcept((is_nothrow_swappable_v<Args> && ...)) {
-            ((static_cast<element<Is>&>(*this).value.swap(static_cast<element<Is>&>(rhs).value)), ...);
+            ((static_cast<element<Is>&>(*this).swap(static_cast<element<Is>&>(rhs))), ...);
         }
         constexpr void swap(const tuple_impl& rhs) const noexcept((is_nothrow_swappable_v<const Args> && ...)) {
-            ((static_cast<const element<Is>&>(*this).value.swap(static_cast<const element<Is>&>(rhs).value)), ...);
+            ((static_cast<const element<Is>&>(*this).swap(static_cast<const element<Is>&>(rhs))), ...);
         }
     };
     template <typename T>
@@ -292,7 +312,7 @@ public:
             conjunction_v<typename get_disambiguating_constraint<UArgs...>::type, is_constructible<Args, UArgs>...> &&
             !(reference_constructs_from_temporary_v<Args, UArgs&&> || ...) )
     explicit((!conjunction_v<is_convertible<UArgs, Args>...>))
-        constexpr tuple(UArgs&&... uargs) : _impl{move(uargs)...} {}
+        constexpr tuple(UArgs&&... uargs) : _impl{forward<UArgs>(uargs)...} {}
     template <typename... UArgs>
         requires(sizeof...(UArgs) == sizeof...(Args) &&
             conjunction_v<typename get_disambiguating_constraint<UArgs...>::type, is_constructible<Args, UArgs>...> &&
@@ -474,13 +494,13 @@ public:
     }
     
     template <size_t I, typename... Types>
-    friend constexpr tuple_element_t<I, tuple<Types...>>& get(tuple<Types...>&) noexcept requires(I < sizeof...(Types));
+    friend constexpr tuple_element_t<I, tuple<Types...>>& OZLIB_NAMESPACE::get(tuple<Types...>&) noexcept requires(I < sizeof...(Types));
     template <size_t I, typename... Types>
-    friend constexpr tuple_element_t<I, tuple<Types...>>&& get(tuple<Types...>&&) noexcept requires(I < sizeof...(Types));
+    friend constexpr tuple_element_t<I, tuple<Types...>>&& OZLIB_NAMESPACE::get(tuple<Types...>&&) noexcept requires(I < sizeof...(Types));
     template <size_t I, typename... Types>
-    friend constexpr const tuple_element_t<I, tuple<Types...>>& get(const tuple<Types...>&) noexcept requires(I < sizeof...(Types));
+    friend constexpr const tuple_element_t<I, tuple<Types...>>& OZLIB_NAMESPACE::get(const tuple<Types...>&) noexcept requires(I < sizeof...(Types));
     template <size_t I, typename... Types>
-    friend constexpr const tuple_element_t<I, tuple<Types...>>&& get(const tuple<Types...>&&) noexcept requires(I < sizeof...(Types));
+    friend constexpr const tuple_element_t<I, tuple<Types...>>&& OZLIB_NAMESPACE::get(const tuple<Types...>&&) noexcept requires(I < sizeof...(Types));
     // template <typename T, typename... Types>
     // friend constexpr T& get(tuple<Types...>&) noexcept;
     // template <typename T, typename...Types>
@@ -520,12 +540,12 @@ struct tuple_traits {
 };
 template <exposition_only::tuple_like... T>
 struct tuple_cat_helper {
-    using types = typename detail::type_list_cat_multiple_t<typename tuple_traits<T>::types...>::type;
+    using types = typename detail::type_list_cat_multiple_t<typename tuple_traits<T>::types...>;
     static constexpr size_t size = types::size();
     using result = types::template apply<tuple>;
     template <typename... Types1, size_t... I1, size_t... I2, exposition_only::tuple_like Tuple>
-    static constexpr tuple<Types1..., tuple_element_t<I2, Tuple>...> forward_merge(tuple<Types1...>&& t1, Tuple&& t2, index_sequence<I1...>, index_sequence<I2...>) {
-        return forward_as_tuple(forward<Types1>(get<I1>(forward<tuple_element_t<I1, tuple<Types1...>&&>>(t1)))..., forward<tuple_element_t<I2, Tuple>>(get<I2>(forward<Tuple>(t2)))...);
+    static constexpr tuple<Types1..., tuple_element_t<I2, remove_cvref_t<Tuple>>...> forward_merge(tuple<Types1...>&& t1, Tuple&& t2, index_sequence<I1...>, index_sequence<I2...>) {
+        return forward_as_tuple(forward<Types1>(get<I1>(forward<tuple<Types1...>>(t1)))..., forward<tuple_element_t<I2, remove_cvref_t<Tuple>>>(get<I2>(forward<Tuple>(t2)))...);
     }
 
     template <typename... Types1, exposition_only::tuple_like Tuple, exposition_only::tuple_like... Tuples>
@@ -555,19 +575,19 @@ inline constexpr exposition_only::ignore_type ignore{};
 
 template <impl::size_t I, typename... Types>
 constexpr tuple_element_t<I, impl::tuple<Types...>>& get(impl::tuple<Types...>& t) noexcept requires(I < sizeof...(Types)) {
-    return static_cast<impl::tuple<Types...>::template element<I>&>(t)._value;
+    return static_cast<impl::tuple<Types...>::template element<I>&>(t._impl).value;
 }
 template <impl::size_t I, typename... Types>
 constexpr tuple_element_t<I, impl::tuple<Types...>>&& get(impl::tuple<Types...>&& t) noexcept requires(I < sizeof...(Types)) {
-    return static_cast<impl::tuple<Types...>::template element<I>&&>(t)._value;
+    return static_cast<tuple_element_t<I, impl::tuple<Types...>>&&>(static_cast<impl::tuple<Types...>::template element<I>&&>(t._impl).value);
 }
 template <impl::size_t I, typename... Types>
 constexpr const tuple_element_t<I, impl::tuple<Types...>>& get(const impl::tuple<Types...>& t) noexcept requires(I < sizeof...(Types)) {
-    return static_cast<const impl::tuple<Types...>::template element<I>&>(t)._value;
+    return static_cast<const impl::tuple<Types...>::template element<I>&>(t._impl).value;
 }
 template <impl::size_t I, typename... Types>
 constexpr const tuple_element_t<I, impl::tuple<Types...>>&& get(const impl::tuple<Types...>&& t) noexcept requires(I < sizeof...(Types)) {
-    return static_cast<const impl::tuple<Types...>::template element<I>&&>(t)._value;
+    return static_cast<const tuple_element_t<I, impl::tuple<Types...>>&&>(static_cast<const impl::tuple<Types...>::template element<I>&&>(t._impl).value);
 }
 
 template <typename... Types>
@@ -576,6 +596,7 @@ class tuple_size<impl::tuple<Types...>> : public impl::integral_constant<impl::s
 template <impl::size_t I, typename... Types>
 class tuple_element<I, impl::tuple<Types...>> {
 public:
+    using type = typename impl::detail::type_list<Types...>::template get_type_at_index<I>;
 };
 
 template <typename... Types>

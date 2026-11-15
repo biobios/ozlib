@@ -55,13 +55,14 @@ using type_list_cat_multiple_t = typename type_list_cat_multiple<Lists...>::type
 
 template <typename = void>
 struct dummy {
+    dummy();
     template <typename U>
     dummy(U&&);
 };
 
 template <typename... Types, size_t N>
 class get_type_at_index<type_list<Types...>, N> {
-#if defined(__GNUC__) || !defined(__clang__)
+#if defined(__clang__) || (defined(__GNUC__) && __GNUC__ >= 14)
 public:
     using type = __type_pack_element<N, Types...>;
 #else

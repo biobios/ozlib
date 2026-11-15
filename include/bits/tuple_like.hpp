@@ -18,7 +18,10 @@ template <impl::size_t I, typename T>
 class tuple_element;
 
 template <impl::size_t I, typename T>
-class tuple_element<I, const T> : public tuple_element<I, T> {};
+class tuple_element<I, const T> {
+public:
+    using type = const typename tuple_element<I, T>::type;
+};
 
 template <impl::size_t I, typename T>
 using tuple_element_t = typename tuple_element<I, T>::type;
