@@ -149,22 +149,22 @@ class tuple {
             return *this;
         }
         template <typename... UArgs>
-        constexpr tuple_impl& operator=(const tuple<UArgs...>::template tuple_impl<Is...>& other) {
+        constexpr tuple_impl& operator=(const tuple<UArgs...>::impl_type& other) {
             ((static_cast<element<Is>&>(*this) = static_cast<const typename tuple<UArgs...>::template element<Is>&>(other)), ...);
             return *this;
         }
         template <typename... UArgs>
-        constexpr const tuple_impl& operator=(const tuple<UArgs...>::template tuple_impl<Is...>& other) const {
+        constexpr const tuple_impl& operator=(const tuple<UArgs...>::impl_type& other) const {
             ((static_cast<const element<Is>&>(*this) = static_cast<const typename tuple<UArgs...>::template element<Is>&>(other)), ...);
             return *this;
         }
         template <typename... UArgs>
-        constexpr tuple_impl& operator=(tuple<UArgs...>::template tuple_impl<Is...>&& other) {
+        constexpr tuple_impl& operator=(tuple<UArgs...>::impl_type&& other) {
             ((static_cast<element<Is>&>(*this) = static_cast<typename tuple<UArgs...>::template element<Is>&&>(other)), ...);
             return *this;
         }
         template <typename... UArgs>
-        constexpr const tuple_impl& operator=(tuple<UArgs...>::template tuple_impl<Is...>&& other) const {
+        constexpr const tuple_impl& operator=(tuple<UArgs...>::impl_type&& other) const {
             ((static_cast<const element<Is>&>(*this) = static_cast<typename tuple<UArgs...>::template element<Is>&&>(other)), ...);
             return *this;
         }
@@ -240,11 +240,24 @@ class tuple {
     struct convertible_tuple;
     template <impl::size_t... Is, typename U, typename... UArgs>
     struct convertible_tuple<index_sequence<Is...>, U, UArgs...> {
-        using T0 = typename args_type_list::template get_type_at_index<0>;
-        using U0 = typename detail::type_list<UArgs...>::template get_type_at_index<0>;
-        static constexpr bool value = sizeof...(Args) == sizeof...(UArgs) &&
-            (is_constructible_v<Args, decltype(get<Is>(declval<U>()))> && ...) &&
-            (sizeof...(Args) != 1 || (!is_convertible_v<U, T0> && !is_constructible_v<T0, U> && !is_same_v<T0, U0>));
+        static consteval bool calc() {
+            if (sizeof...(Args) != sizeof...(UArgs)) {
+                return false;
+            }
+            if (!(is_constructible_v<Args, decltype(get<Is>(declval<U>()))> && ...)) {
+                return false;
+            }
+            if constexpr (sizeof...(Args) == 1) {
+                using T0 = typename args_type_list::template get_type_at_index<0>;
+                using U0 = typename detail::type_list<UArgs...>::template get_type_at_index<0>;
+                if (is_convertible_v<U, T0> || is_constructible_v<T0, U> || is_same_v<T0, U0>) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        static constexpr bool value = calc();
     };
     template <typename T, typename U>
     struct explicit_convert_tuple;
@@ -254,36 +267,64 @@ class tuple {
     };
     template <typename U>
     struct delete_convert_pair {
-        using T0 = typename args_type_list::template get_type_at_index<0>;
-        using T1 = typename args_type_list::template get_type_at_index<1>;
-        static constexpr bool value = 
-            (reference_constructs_from_temporary_v<T0, decltype(get<0>(declval<U>()))> ||
-            reference_constructs_from_temporary_v<T1, decltype(get<1>(declval<U>()))>);
+        static consteval bool calc() {
+            if constexpr (sizeof...(Args) == 2) {
+                using T0 = typename args_type_list::template get_type_at_index<0>;
+                using T1 = typename args_type_list::template get_type_at_index<1>;
+                return reference_constructs_from_temporary_v<T0, decltype(get<0>(declval<U>()))> ||
+                    reference_constructs_from_temporary_v<T1, decltype(get<1>(declval<U>()))>;
+            }
+            return false;
+        }
+        static constexpr bool value = calc();
     };
     template <typename U>
     struct convertible_pair {
-        using T0 = typename args_type_list::template get_type_at_index<0>;
-        using T1 = typename args_type_list::template get_type_at_index<1>;
-        static constexpr bool value = sizeof...(Args) == 2 &&
-            is_constructible_v<T0, decltype(get<0>(declval<U>()))> &&
-            is_constructible_v<T1, decltype(get<1>(declval<U>()))>;
+        static consteval bool calc() {
+            if constexpr (sizeof...(Args) == 2) {
+                using T0 = typename args_type_list::template get_type_at_index<0>;
+                using T1 = typename args_type_list::template get_type_at_index<1>;
+                return is_constructible_v<T0, decltype(get<0>(declval<U>()))> &&
+                    is_constructible_v<T1, decltype(get<1>(declval<U>()))>;
+            }
+            return false;
+        }
+        static constexpr bool value = calc();
     };
     template <typename U>
     struct explicit_convert_pair {
-        using T0 = typename args_type_list::template get_type_at_index<0>;
-        using T1 = typename args_type_list::template get_type_at_index<1>;
-        static constexpr bool value = !is_convertible_v<decltype(get<0>(declval<U>())), T0> ||
-            !is_convertible_v<decltype(get<1>(declval<U>())), T1>;
+        static consteval bool calc() {
+            if constexpr (sizeof...(Args) == 2) {
+                using T0 = typename args_type_list::template get_type_at_index<0>;
+                using T1 = typename args_type_list::template get_type_at_index<1>;
+                return !is_convertible_v<decltype(get<0>(declval<U>())), T0> ||
+                    !is_convertible_v<decltype(get<1>(declval<U>())), T1>;
+            }
+            return false;
+        }
+        static constexpr bool value = calc();
     };
     template <typename T, typename U>
     struct convertible_tuple_like;
     template <impl::size_t... Is, typename U>
     struct convertible_tuple_like<index_sequence<Is...>, U> {
-        static constexpr bool value =
-            (is_constructible_v<Args, decltype(get<Is>(declval<U>()))> && ...) &&
-            (sizeof...(Args) != 1 ||
-             (!is_convertible_v<U, typename args_type_list::template get_type_at_index<0>> &&
-              !is_constructible_v<typename args_type_list::template get_type_at_index<0>, U>));
+        static consteval bool calc() {
+            if (sizeof...(Args) != tuple_size_v<remove_cvref_t<U>>) {
+                return false;
+            }
+            if (!(is_constructible_v<Args, decltype(get<Is>(declval<U>()))> && ...)) {
+                return false;
+            }
+            if constexpr (sizeof...(Args) == 1 && tuple_size_v<remove_cvref_t<U>> == 1) {
+                using T0 = typename args_type_list::template get_type_at_index<0>;
+                using U0 = decltype(get<0>(declval<U>()));
+                if (is_convertible_v<U, T0> || is_constructible_v<T0, U> || is_same_v<T0, U0>) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        static constexpr bool value = calc();
     };
     template <typename T, typename U>
     using explicit_convert_tuple_like = explicit_convert_tuple<T, U>;
@@ -388,7 +429,6 @@ public:
     template <exposition_only::tuple_like UTuple>
         requires(exposition_only::different_from<UTuple, tuple> &&
             // !detail::is_specialization_of_v<remove_cvref_t<UTuple>, ranges::subrange> &&
-            sizeof...(Args) == tuple_size_v<remove_cvref_t<UTuple>> &&
             convertible_tuple_like<args_indices, UTuple>::value)
     explicit(explicit_convert_tuple_like<args_indices, UTuple>::value)
         constexpr tuple(UTuple&& other) : _impl{construct_tuple_like_tag{}, static_cast<decltype(other)>(other)} {}

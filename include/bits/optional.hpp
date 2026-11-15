@@ -40,7 +40,8 @@ public:
 };
 inline constexpr nullopt_t nullopt{nullopt_t::_init_tag{}};
 template <typename T>
-    requires(!is_reference_v<T> && !same_as<remove_cv_t<T>, nullopt_t>)
+    requires(!OZLIB_NAMESPACE::impl::is_reference_v<T> &&
+        !OZLIB_NAMESPACE::impl::same_as<OZLIB_NAMESPACE::impl::remove_cv_t<T>, OZLIB_NAMESPACE::impl::nullopt_t>)
 class optional {
 public:
     using value_type = T;
@@ -170,7 +171,22 @@ public:
         return **this;
     }
     constexpr void swap(optional& rhs) noexcept(is_nothrow_move_constructible_v<T> &&
-        is_nothrow_swappable_v<T>);
+        is_nothrow_swappable_v<T>) {
+        if (_has_value && rhs._has_value) {
+            using OZLIB_NAMESPACE::swap;
+            swap(**this, *rhs);
+        } else if (_has_value) {
+            new (rhs._storage) T(move(**this));
+            reinterpret_cast<T*>(_storage)->~T();
+            _has_value = false;
+            rhs._has_value = true;
+        } else if (rhs._has_value) {
+            new (_storage) T(move(*rhs));
+            reinterpret_cast<T*>(rhs._storage)->~T();
+            _has_value = true;
+            rhs._has_value = false;
+        }
+    }
     constexpr void reset() noexcept {
         if (_has_value) {
             reinterpret_cast<T*>(_storage)->~T();
@@ -402,24 +418,5 @@ template <typename T>
     requires(impl::is_move_constructible_v<T> && impl::is_swappable_v<T>)
 constexpr void swap(impl::optional<T>& x, impl::optional<T>& y) noexcept(noexcept(x.swap(y))) {
     x.swap(y);
-}
-template <typename T>
-    requires(!impl::is_reference_v<T> && !impl::same_as<impl::remove_cv_t<T>, impl::nullopt_t>)
-constexpr void impl::optional<T>::swap(impl::optional<T>& rhs) noexcept(impl::is_nothrow_move_constructible_v<T> &&
-    impl::is_nothrow_swappable_v<T>) {
-    if (_has_value && rhs._has_value) {
-        using OZLIB_NAMESPACE::swap;
-        swap(**this, *rhs);
-    } else if (_has_value) {
-        new (rhs._storage) T(move(**this));
-        reinterpret_cast<T*>(_storage)->~T();
-        _has_value = false;
-        rhs._has_value = true;
-    } else if (rhs._has_value) {
-        new (_storage) T(move(*rhs));
-        reinterpret_cast<T*>(rhs._storage)->~T();
-        _has_value = true;
-        rhs._has_value = false;
-    }
 }
 }

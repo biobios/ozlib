@@ -48,8 +48,8 @@ struct array {
     }
 
     constexpr void swap(array& other) noexcept(
-        noexcept(impl::swap(impl::declval<T&>(), impl::declval<T&>()))) {
-        for (size_type i = 0; i < N; ++i) impl::swap(_data[i], other._data[i]);
+        noexcept(swap(impl::declval<T&>(), impl::declval<T&>()))) {
+        for (size_type i = 0; i < N; ++i) swap(_data[i], other._data[i]);
     }
 
     constexpr iterator begin() noexcept { return &_data[0]; }

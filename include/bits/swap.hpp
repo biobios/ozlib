@@ -65,38 +65,32 @@ inline constexpr swap_fn::swap_fn swap{};
 }
 
 }  // namespace ranges
-
+}  // namespace impl
 
 template <typename T>
-constexpr void swap(T& a, T& b) noexcept(is_nothrow_move_constructible_v<T> &&
-                                         is_nothrow_move_assignable_v<T>) {
+constexpr void swap(T& a, T& b) noexcept(impl::is_nothrow_move_constructible_v<T> &&
+                                         impl::is_nothrow_move_assignable_v<T>) {
     T tmp(OZLIB_NAMESPACE::impl::move(a));
     a = OZLIB_NAMESPACE::impl::move(b);
     b = OZLIB_NAMESPACE::impl::move(tmp);
 }
 
-template <typename T, size_t N>
+template <typename T, impl::size_t N>
 constexpr void swap(T (&a)[N], T (&b)[N]) noexcept(noexcept(swap(*a, *b))) {
-    for (size_t i = 0; i < N; ++i) {
+    for (impl::size_t i = 0; i < N; ++i) {
         swap(a[i], b[i]);
     }
 }
 
 template <typename T>
-concept swappable = requires(T& a, T& b) { ranges::swap(a, b); };
+concept swappable = requires(T& a, T& b) { impl::ranges::swap(a, b); };
 
 template <typename T, typename U>
-concept swappable_with = common_reference_with<T, U> && requires(T&& t, U&& u) {
-    ranges::swap(impl::forward<T>(t), impl::forward<T>(t));
-    ranges::swap(impl::forward<U>(u), impl::forward<U>(u));
-    ranges::swap(impl::forward<T>(t), impl::forward<U>(u));
-    ranges::swap(impl::forward<U>(u), impl::forward<T>(t));
+concept swappable_with = impl::common_reference_with<T, U> && requires(T&& t, U&& u) {
+    impl::ranges::swap(impl::forward<T>(t), impl::forward<T>(t));
+    impl::ranges::swap(impl::forward<U>(u), impl::forward<U>(u));
+    impl::ranges::swap(impl::forward<T>(t), impl::forward<U>(u));
+    impl::ranges::swap(impl::forward<U>(u), impl::forward<T>(t));
 };
-
-}  // namespace impl
-
-// NOLINTBEGIN(misc-unused-using-decls)
-using impl::swap;
-// NOLINTEND(misc-unused-using-decls)
 
 }  // namespace OZLIB_NAMESPACE

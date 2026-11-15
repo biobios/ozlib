@@ -18,7 +18,6 @@ using impl::in_place;
 using impl::in_place_t;
 using impl::monostate;
 using impl::move;
-using impl::swap;
 using impl::to_underlying;
 // NOLINTEND(misc-unused-using-decls)
 
