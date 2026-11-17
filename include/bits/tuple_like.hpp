@@ -5,6 +5,7 @@
 #include <bits/size_t.hpp>
 
 namespace OZLIB_NAMESPACE {
+namespace impl {
 template <typename T>
 class tuple_size;
 
@@ -25,4 +26,5 @@ public:
 
 template <impl::size_t I, typename T>
 using tuple_element_t = typename tuple_element<I, T>::type;
+}
 }

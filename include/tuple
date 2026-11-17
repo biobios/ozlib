@@ -14,4 +14,9 @@ using impl::make_tuple;
 using impl::forward_as_tuple;
 using impl::tie;
 using impl::tuple_cat;
+using impl::get;
+using impl::tuple_element;
+using impl::tuple_element_t;
+using impl::tuple_size;
+using impl::tuple_size_v;
 }

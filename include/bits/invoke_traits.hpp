@@ -22,7 +22,7 @@ struct invoke_result_helper {};
 
 template <typename F, typename T1, typename T2, typename... Args>
     requires(is_base_of_v<T1, remove_cvref_t<T2>> && is_function_v<F> &&
-             requires(F T1::*f, T2 t2, Args... args) { (t2.*f)(args...); })
+             requires { (declval<T2>().*declval<F T1::*>())(declval<Args>()...); })
 struct invoke_result_helper<F T1::*, T2, Args...> {
     using type =
         decltype((declval<T2>().*declval<F T1::*>())(declval<Args>()...));
@@ -32,14 +32,14 @@ template <typename F, typename T1, typename T2, typename... Args>
     requires(
         is_same_v<reference_wrapper<T1>, remove_cvref_t<T2>> &&
         is_function_v<F> &&
-        requires(F T1::*f, T2 t2, Args... args) { (t2.get().*f)(args...); })
+        requires { (declval<T2>().get().*declval<F T1::*>())(declval<Args>()...); })
 struct invoke_result_helper<F T1::*, T2, Args...> {
     using type =
         decltype((declval<T2>().get().*declval<F T1::*>())(declval<Args>()...));
 };
 
 template <typename F, typename T1, typename T2, typename... Args>
-    requires(requires(F T1::*f, T2 t2, Args... args) { ((*t2).*f)(args...); })
+    requires(requires { ((*declval<T2>()).*declval<F T1::*>())(declval<Args>()...); })
 struct invoke_result_helper<F T1::*, T2, Args...> {
     using type =
         decltype(((*declval<T2>()).*declval<F T1::*>())(declval<Args>()...));
@@ -47,7 +47,7 @@ struct invoke_result_helper<F T1::*, T2, Args...> {
 
 template <typename R, typename T, typename Arg>
     requires(!is_function_v<R> && is_base_of_v<T, remove_cvref_t<Arg>> &&
-             requires(R T::*f, Arg t1) { (t1.*f); })
+             requires { declval<Arg>().*declval<R T::*>(); })
 struct invoke_result_helper<R T::*, Arg> {
     using type = decltype(declval<Arg>().*declval<R T::*>());
 };
@@ -55,19 +55,21 @@ struct invoke_result_helper<R T::*, Arg> {
 template <typename R, typename T, typename Arg>
     requires(!is_function_v<R> &&
              is_same_v<reference_wrapper<T>, remove_cvref_t<Arg>> &&
-             requires(R T::*f, Arg t1) { (t1.get().*f); })
+             requires {declval<Arg>().get().*declval<R T::*>(); })
 struct invoke_result_helper<R T::*, Arg> {
     using type = decltype(declval<Arg>().get().*declval<R T::*>());
 };
 
 template <typename R, typename T, typename Arg>
-    requires(!is_function_v<R> && requires(R T::*f, Arg t1) { ((*t1).*f); })
+    requires(!is_function_v<R> && requires {(*declval<Arg>()).*declval<R T::*>(); })
 struct invoke_result_helper<R T::*, Arg> {
     using type = decltype((*declval<Arg>()).*declval<R T::*>());
 };
 
 template <typename F, typename... Args>
-    requires(requires(F f, Args... args) { f(args...); })
+    requires requires{
+        declval<F>()(declval<Args>()...);
+    }
 struct invoke_result_helper<F, Args...> {
     using type = decltype(declval<F>()(declval<Args>()...));
 };

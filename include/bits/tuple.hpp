@@ -31,7 +31,6 @@ struct is_specialization_of_array<array<T, N>> : true_type {};
 }
 template <typename... Args>
 class tuple;
-}
 
 template <impl::size_t I, typename... Types>
 constexpr tuple_element_t<I, impl::tuple<Types...>>& get(impl::tuple<Types...>&) noexcept requires(I < sizeof...(Types));
@@ -42,7 +41,6 @@ constexpr const tuple_element_t<I, impl::tuple<Types...>>& get(const impl::tuple
 template <impl::size_t I, typename... Types>
 constexpr const tuple_element_t<I, impl::tuple<Types...>>&& get(const impl::tuple<Types...>&&) noexcept requires(I < sizeof...(Types));
 
-namespace impl{
 
 namespace exposition_only {
 template <typename T>
@@ -534,13 +532,13 @@ public:
     }
     
     template <size_t I, typename... Types>
-    friend constexpr tuple_element_t<I, tuple<Types...>>& OZLIB_NAMESPACE::get(tuple<Types...>&) noexcept requires(I < sizeof...(Types));
+    friend constexpr tuple_element_t<I, tuple<Types...>>& get(tuple<Types...>&) noexcept requires(I < sizeof...(Types));
     template <size_t I, typename... Types>
-    friend constexpr tuple_element_t<I, tuple<Types...>>&& OZLIB_NAMESPACE::get(tuple<Types...>&&) noexcept requires(I < sizeof...(Types));
+    friend constexpr tuple_element_t<I, tuple<Types...>>&& get(tuple<Types...>&&) noexcept requires(I < sizeof...(Types));
     template <size_t I, typename... Types>
-    friend constexpr const tuple_element_t<I, tuple<Types...>>& OZLIB_NAMESPACE::get(const tuple<Types...>&) noexcept requires(I < sizeof...(Types));
+    friend constexpr const tuple_element_t<I, tuple<Types...>>& get(const tuple<Types...>&) noexcept requires(I < sizeof...(Types));
     template <size_t I, typename... Types>
-    friend constexpr const tuple_element_t<I, tuple<Types...>>&& OZLIB_NAMESPACE::get(const tuple<Types...>&&) noexcept requires(I < sizeof...(Types));
+    friend constexpr const tuple_element_t<I, tuple<Types...>>&& get(const tuple<Types...>&&) noexcept requires(I < sizeof...(Types));
     // template <typename T, typename... Types>
     // friend constexpr T& get(tuple<Types...>&) noexcept;
     // template <typename T, typename...Types>
@@ -611,7 +609,6 @@ struct ignore_type {
 };
 }
 inline constexpr exposition_only::ignore_type ignore{};
-}
 
 template <impl::size_t I, typename... Types>
 constexpr tuple_element_t<I, impl::tuple<Types...>>& get(impl::tuple<Types...>& t) noexcept requires(I < sizeof...(Types)) {
@@ -638,6 +635,7 @@ class tuple_element<I, impl::tuple<Types...>> {
 public:
     using type = typename impl::detail::type_list<Types...>::template get_type_at_index<I>;
 };
+}
 
 template <typename... Types>
 constexpr void swap(impl::tuple<Types...>& x, impl::tuple<Types...>& y) noexcept(noexcept(x.swap(y))) {
